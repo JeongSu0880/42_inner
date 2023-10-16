@@ -6,15 +6,15 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 13:26:13 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/11 14:40:51 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/13 13:17:04 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	<stdlib.h>
+#include	"libft.h"
 
 size_t	ft_strlen(char *str)
 {
-	int	cnt;
+	size_t	cnt;
 
 	cnt = 0;
 	while (str[cnt])

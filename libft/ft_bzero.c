@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isascii.c                                       :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/11 12:59:49 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/12 15:34:12 by jungslee         ###   ########.fr       */
+/*   Created: 2023/10/13 15:11:58 by jungslee          #+#    #+#             */
+/*   Updated: 2023/10/13 16:32:17 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"libft.h"
 
-int	ft_isascii(int c)
+void	ft_bzero(void *ptr, size_t num)
 {
-	if (0 <= c && c <= 127)
-		return (1);
-	else
-		return (0);
+	unsigned char	*tmp_ptr;
+
+	tmp_ptr = ptr;
+	while (num--)
+	{
+		*tmp_ptr = 0;
+		tmp_ptr++;
+	}
 }

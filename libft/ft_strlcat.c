@@ -1,21 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isascii.c                                       :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/11 12:59:49 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/12 15:34:12 by jungslee         ###   ########.fr       */
+/*   Created: 2023/10/16 14:18:54 by jungslee          #+#    #+#             */
+/*   Updated: 2023/10/16 14:49:30 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"libft.h"
 
-int	ft_isascii(int c)
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	if (0 <= c && c <= 127)
-		return (1);
+	size_t	dst_len;
+	size_t	src_len;
+	size_t	i;
+
+	dst_len = ft_strlen(dst);
+	src_len = ft_strlen(src);
+	i = 0;
+	while ((dst_len + i + 1 < size) && *(src + i))
+	{
+		*(dst + dst_len + i) = *(src + i);
+		i++;
+	}
+	*(dst + dst_len + i) = '\0';
+	if (dst_len < size)
+		return (src_len + dst_len);
 	else
-		return (0);
+		return (src_len + size);
 }
