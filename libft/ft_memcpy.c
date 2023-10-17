@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 15:21:52 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/13 21:25:29 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/17 21:48:46 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,17 @@ void	*ft_memcpy(void *dest, const void *source, size_t num)
 {
 	unsigned char	*dest_tmp;
 	unsigned char	*source_tmp;
+	size_t			iter;
 
+	iter = 0;
+	dest_tmp = (unsigned char *)dest;
+	source_tmp = (unsigned char *)source;
 	if (dest == source)
 		return (dest);
-	dest_tmp = dest;
-	source_tmp = source;
-	while (num--)
+	while (iter < num)
 	{
-		*dest_tmp = *source_tmp;
-		dest_tmp++;
-		source_tmp++;
+		*(dest_tmp + iter) = *(source_tmp + iter);
+		iter++;
 	}
 	return (dest);
 }

@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:15:50 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/16 17:31:09 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/17 17:43:17 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_strrchr(const char *s, int c)
 	char	*tmp;
 	char	*add;
 
-	tmp = s;
+	tmp = (char *)s;
 	add = NULL;
 	while (*tmp)
 	{

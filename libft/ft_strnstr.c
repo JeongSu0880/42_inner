@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 20:24:03 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/16 21:25:30 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/17 22:05:35 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 	i = 0;
 	if (*find == '\0')
 		return (str);
-	while (i < len)
+	while (i < len && *str)
 	{
 		if (*find == *str)
 		{
