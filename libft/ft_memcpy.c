@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 15:21:52 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/17 21:48:46 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/21 20:17:53 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,3 +30,18 @@ void	*ft_memcpy(void *dest, const void *source, size_t num)
 	}
 	return (dest);
 }
+/*
+#include	<string.h>
+#include	<stdio.h>
+
+int	main(void)
+{
+	char	str1[] = "aaaaaaaaaa";
+	char	str2[] = "bbbbbb";
+	char	*result1 = ft_memcpy(str1, str2, 4);
+	char	*result2 = memcpy(str1, str2, 4);
+
+	printf("ft : %s\n", result1);
+	printf("original : %s\n", result2);
+}
+*/

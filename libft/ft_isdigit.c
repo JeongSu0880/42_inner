@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 12:45:29 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/12 15:34:39 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/21 19:59:37 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,3 +19,13 @@ int	ft_isdigit(int c)
 	else
 		return (0);
 }
+/*
+#include	<ctype.h>
+#include	<stdio.h>
+
+int	main(void)
+{
+	printf("%d\n", ft_isdigit('7'));
+	printf("%d\n", isdigit('7'));
+}
+*/

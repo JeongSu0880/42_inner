@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 14:52:26 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/16 15:05:02 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/21 20:55:29 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,3 +18,13 @@ int	ft_toupper(int c)
 		c -= 32;
 	return (c);
 }
+/*
+#include	<ctype.h>
+#include	<stdio.h>
+
+int main(void)
+{
+	printf("ft : %c\n", ft_toupper('a'));
+	printf("original : %c\n", toupper('a'));
+}
+*/

@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:15:50 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/17 17:43:17 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/21 20:51:48 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,17 @@ char	*ft_strrchr(const char *s, int c)
 			add = tmp;
 		tmp++;
 	}
-	if (c == '\0')
+	if ((char)c == '\0')
 		add = tmp;
 	return (add);
 }
+/*
+#include	<string.h>
+#include	<stdio.h>
+
+int	main(void)
+{
+	printf("ft : %s\n", ft_strrchr("newjeans e hypeboy yo", 'y'));
+	printf("original : %s\n", strrchr("newjeans e hypeboy yo", 'y'));
+}
+*/

@@ -1,48 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcmp.c                                        :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/16 21:31:34 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/21 20:09:49 by jungslee         ###   ########.fr       */
+/*   Created: 2023/10/21 17:20:14 by jungslee          #+#    #+#             */
+/*   Updated: 2023/10/21 19:55:41 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"libft.h"
+#include	<stdlib.h>
 
-int	ft_memcmp(const void *s1, const void *s2, size_t n)
+void	*ft_calloc(size_t count, size_t size)
 {
-	unsigned char	*str1;
-	unsigned char	*str2;
-	int				cmp;
-	size_t			i;
+	void	*arr;
 
-	if (n == 0)
+	arr = malloc(size * count);
+	if (arr == NULL)
 		return (0);
-	i = 0;
-	str1 = (unsigned char *)s1;
-	str2 = (unsigned char *)s2;
-	cmp = *str1 - *str2;
-	while (i < n && (cmp == 0))
-	{
-		cmp = *(str1 + i) - *(str2 + i);
-		i++;
-	}
-	return (cmp);
+	ft_bzero(arr, size * count);
+	return (arr);
 }
 /*
-#include	<string.h>
 #include	<stdio.h>
+#include	<stdlib.h>
 
 int	main(void)
 {
-	char str1[] = "abcdef";
-	char str2[] = "abcddd";
+	char *str1;
+	char *str2;
 
-	printf("ft : %d\n", ft_memcmp(str1, str2, 5));
-	printf("original : %d\n", memcmp(str1, str2, 5));
-
+	str1 = ft_calloc(5, 4);
+	str2 = calloc(5, 4);
+	write(1, str1, 20);
+	write(1, str2, 20);
+	free(str1);
+	free(str2);
 }
 */

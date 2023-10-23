@@ -1,48 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcmp.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/16 21:31:34 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/21 20:09:49 by jungslee         ###   ########.fr       */
+/*   Created: 2023/10/21 18:08:06 by jungslee          #+#    #+#             */
+/*   Updated: 2023/10/21 18:32:52 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"libft.h"
+#include	<stdlib.h>
 
-int	ft_memcmp(const void *s1, const void *s2, size_t n)
+char	*ft_strdup(const char *s)
 {
-	unsigned char	*str1;
-	unsigned char	*str2;
-	int				cmp;
-	size_t			i;
+	char	*arr;
+	size_t	len;
+	size_t	iter;
 
-	if (n == 0)
+	len = ft_strlen(s);
+	iter = 0;
+	arr = (char *)malloc(len * sizeof(char) + 1);
+	if (arr == NULL)
 		return (0);
-	i = 0;
-	str1 = (unsigned char *)s1;
-	str2 = (unsigned char *)s2;
-	cmp = *str1 - *str2;
-	while (i < n && (cmp == 0))
+	while (iter < len)
 	{
-		cmp = *(str1 + i) - *(str2 + i);
-		i++;
+		*(arr + iter) = *(s + iter);
+		iter++;
 	}
-	return (cmp);
+	*(arr + iter) = '\0';
+	return (arr);
 }
 /*
-#include	<string.h>
 #include	<stdio.h>
+#include	<string.h>
 
 int	main(void)
 {
-	char str1[] = "abcdef";
-	char str2[] = "abcddd";
+	char	str[] = "this is a normal test";
+	char	*dup;
 
-	printf("ft : %d\n", ft_memcmp(str1, str2, 5));
-	printf("original : %d\n", memcmp(str1, str2, 5));
-
+	dup = ft_strdup(str);
+	write(1, dup, ft_strlen(dup));
+	free(dup);
 }
 */

@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:07:32 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/16 15:10:16 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/21 20:53:57 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,3 +18,13 @@ int	ft_tolower(int c)
 		c += 32;
 	return (c);
 }
+/*
+#include	<ctype.h>
+#include	<stdio.h>
+
+int main(void)
+{
+	printf("ft : %c\n", ft_tolower('A'));
+	printf("original : %c\n", tolower('A'));
+}
+*/

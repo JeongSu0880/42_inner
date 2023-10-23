@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 18:28:31 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/16 11:53:28 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/21 20:29:53 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,3 +38,18 @@ void	*ft_memmove(void *dest, const void *src, size_t num)
 	}
 	return (dest);
 }
+/*
+#include	<string.h>
+#include	<stdio.h>
+
+int	main(void)
+{
+	char	str1[] = "aaaaaaaAa";
+	char	str2[] = "bbbbbb";
+	char 	*result1 = ft_memmove(str1, str2, 5);
+	char	*result2 = memmove(str1, str2, 5);
+
+	printf("ft : %s\n", result1);
+	printf("original : %s\n", result2);
+}
+*/

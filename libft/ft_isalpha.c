@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 12:36:50 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/12 15:31:55 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/21 19:57:45 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,3 +19,13 @@ int	ft_isalpha(int c)
 	else
 		return (0);
 }
+/*
+#include	<ctype.h>
+#include	<stdio.h>
+
+int main(void)
+{
+	printf("%d\n", ft_isalpha('d'));
+	printf("%d\n", isalpha('d'));
+}
+*/
