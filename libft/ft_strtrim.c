@@ -3,30 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 21:38:02 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/23 21:47:29 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:54:42 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	<stdlib.h>
 #include	"libft.h"
 
-void	check_index(char *s, char *set, size_t *s_idx, size_t *e_idx)
+char	*ft_strchr_2(const char *s, int c)
+{
+	char	*tmp;
+
+	tmp = (char *)s;
+	while (*tmp)
+	{
+		if (*tmp == (char)c)
+			return (tmp);
+		tmp++;
+	}
+	return (NULL);
+}
+
+static int	check_index(char *s, char *set, size_t *s_idx, size_t *e_idx)
 {
 	size_t	idx;
 
 	idx = 0;
-	while (ft_strchr(set, *(s + idx)))
+	while (ft_strchr_2(set, *(s + idx)))
 		idx++;
 	*s_idx = idx;
-	if (idx == ft_strlen(s))
-		return ;
+	if (idx >= ft_strlen(s))
+		return (0);
 	idx = ft_strlen(s) - 1;
-	while (ft_strchr(set, *(s + idx)))
+	while (idx > 0 && ft_strchr_2(set, *(s + idx)))
 		idx--;
 	*e_idx = idx;
+	return (1);
 }
 
 char	*ft_strtrim(const char *s1, const char *set)
@@ -35,20 +50,23 @@ char	*ft_strtrim(const char *s1, const char *set)
 	size_t	start_idx;
 	size_t	end_idx;
 	int		idx;
+	int		flag;
 
 	start_idx = 0;
 	end_idx = ft_strlen(s1) - 1;
 	if (set != 0)
-		check_index((char *)s1, (char *)set, &start_idx, &end_idx);
+		flag = check_index((char *)s1, (char *)set, &start_idx, &end_idx);
 	arr = (char *)malloc(sizeof(char) * (end_idx - start_idx + 2));
 	if (arr == NULL)
 		return (0);
-	idx = 0;
-	while (start_idx + idx <= end_idx)
+	idx = -1;
+	if (flag == 0)
 	{
-		*(arr + idx) = *(s1 + start_idx + idx);
-		idx++;
+		*arr = '\0';
+		return (arr);
 	}
+	while (start_idx + ++idx <= end_idx)
+		*(arr + idx) = *(s1 + start_idx + idx);
 	*(arr + idx) = '\0';
 	return (arr);
 }
@@ -57,8 +75,8 @@ char	*ft_strtrim(const char *s1, const char *set)
 
 int	main(void)
 {
-	char	str1[] = "     ";
-	char	str2[] = " ";
+	char	str1[] = "";
+	char	str2[] = "";
 	char	*arr;
 
 	arr = ft_strtrim(str1, str2);

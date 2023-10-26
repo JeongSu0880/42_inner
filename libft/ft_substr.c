@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 21:06:58 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/23 16:31:38 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:41:56 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,28 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
 	char	*arr;
 
-	arr = (char *)malloc(sizeof(char) * (len + 1));
-	if (arr == NULL)
-		return (0);
-	*arr = '\0';
 	if (start >= ft_strlen(s))
+	{
+		arr = (char *)malloc(1);
+		if (arr == NULL)
+			return (0);
+		*arr = '\0';
 		return (arr);
-	alloc_value(arr, (char *)(s + start), len + 1);
+	}
+	else if (ft_strlen(s + start) <= len)
+	{
+		arr = (char *)malloc(sizeof(char) * (ft_strlen(s + start) + 1));
+		if (arr == NULL)
+			return (0);
+		alloc_value(arr, (char *)(s + start), ft_strlen(s + start) + 1);
+	}
+	else
+	{
+		arr = (char *)malloc(sizeof(char) * (len + 1));
+		if (arr == NULL)
+			return (0);
+		alloc_value(arr, (char *)(s + start), len + 1);
+	}
 	return (arr);
 }
 /*
