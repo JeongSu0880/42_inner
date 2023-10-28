@@ -6,13 +6,14 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 14:24:15 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/24 20:19:23 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/28 17:09:28 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 # include	<unistd.h>
+# include	<stdlib.h>
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
@@ -50,6 +51,11 @@ void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 char	**ft_split(const char *s, char c);
 char	*ft_itoa(int n);
-//char	*ft_strmapi(const char *s, char (*f)(unsigned int, char));
+char	*ft_strmapi(const char *s, char (*f)(unsigned int, char));
+void	ft_striteri(char *s, void (*f)(unsigned int, char *));
+void	ft_putchar_fd(char c, int fd);
+void	ft_putstr_fd(char *s, int fd);
+void	ft_putendl_fd(char *s, int fd);
+void	ft_putnbr_fd(int n, int fd);
 
 #endif

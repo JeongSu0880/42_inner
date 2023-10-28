@@ -6,11 +6,10 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 21:38:02 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/26 19:54:42 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/28 17:11:12 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	<stdlib.h>
 #include	"libft.h"
 
 char	*ft_strchr_2(const char *s, int c)

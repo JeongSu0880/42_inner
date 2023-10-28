@@ -1,41 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/21 17:20:14 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/28 17:09:51 by jungslee         ###   ########.fr       */
+/*   Created: 2023/10/28 17:26:21 by jungslee          #+#    #+#             */
+/*   Updated: 2023/10/28 18:40:05 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"libft.h"
 
-void	*ft_calloc(size_t count, size_t size)
+static	void	iter_putnbr(long long nbr, int fd)
 {
-	void	*arr;
+	char	nbr_to_c;
 
-	arr = malloc(size * count);
-	if (arr == NULL)
-		return (0);
-	ft_bzero(arr, size * count);
-	return (arr);
+	if (nbr == 0)
+		return ;
+	nbr_to_c = nbr % 10 + '0';
+	iter_putnbr(nbr / 10, fd);
+	write(fd, &nbr_to_c, 1);
 }
-/*
-#include	<stdio.h>
-#include	<stdlib.h>
 
-int	main(void)
+void	ft_putnbr_fd(int n, int fd)
 {
-	char *str1;
-	char *str2;
+	long long	nbr;
 
-	str1 = ft_calloc(5, 4);
-	str2 = calloc(5, 4);
-	write(1, str1, 20);
-	write(1, str2, 20);
-	free(str1);
-	free(str2);
+	if (n < 0)
+	{
+		write(fd, "-", 1);
+		nbr = (long long)n * (-1);
+	}
+	else if (n == 0)
+	{
+		write(fd, "0", 1);
+		return ;
+	}
+	else
+		nbr = n;
+	iter_putnbr(nbr, fd);
 }
-*/

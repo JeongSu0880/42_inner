@@ -6,14 +6,13 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 16:39:29 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/24 17:58:00 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/28 17:10:07 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	<stdlib.h>
 #include	"libft.h"
 
-int	handle_neg(int n, size_t *cnt)
+static int	handle_neg(int n, size_t *cnt)
 {
 	if (n < 0)
 	{
@@ -23,7 +22,16 @@ int	handle_neg(int n, size_t *cnt)
 	return (1);
 }
 
-void	transfer(char *result, int cnt, int sign, long long tmp)
+static void	cnt_num(long long tmp_num, size_t *cnt)
+{
+	while (tmp_num)
+	{
+		(*cnt)++;
+		tmp_num = tmp_num / 10;
+	}
+}
+
+static void	transfer(char *result, int cnt, int sign, long long tmp)
 {
 	int	idx;
 
@@ -51,22 +59,22 @@ char	*ft_itoa(int n)
 	cnt = 0;
 	sign = handle_neg(n, &cnt);
 	tmp = (long long)n * sign;
-	while (tmp)
+	cnt_num(tmp, &cnt);
+	if (!tmp)
 	{
-		cnt++;
-		tmp = tmp / 10;
-	}
-	tmp = (long long)n * sign;
-	result = (char *)malloc(sizeof(char) * (cnt + 2));
-	if (result == NULL)
-		return (0);
-	if (tmp == 0)
-	{
+		result = (char *)malloc(sizeof(char) * 2);
+		if (result == NULL)
+			return (0);
 		*result = '0';
 		*(result + 1) = '\0';
 	}
 	else
+	{
+		result = (char *)malloc(sizeof(char) * (cnt + 1));
+		if (result == NULL)
+			return (0);
 		transfer(result, cnt, sign, tmp);
+	}
 	return (result);
 }
 /*

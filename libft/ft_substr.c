@@ -6,11 +6,10 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 21:06:58 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/26 19:41:56 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/28 17:11:19 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	<stdlib.h>
 #include	"libft.h"
 
 static void	alloc_value(char *arr1, char *arr2, size_t len)

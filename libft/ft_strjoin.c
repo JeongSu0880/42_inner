@@ -6,11 +6,10 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 21:18:26 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/23 14:52:03 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/28 17:10:47 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	<stdlib.h>
 #include	"libft.h"
 
 char	*ft_strjoin(const char *s1, const char *s2)
