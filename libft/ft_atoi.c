@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 21:48:11 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/17 18:24:36 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/31 15:03:11 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ static int	ft_isspace(char c)
 
 static int	ft_issign(char c)
 {
-	if (c == '+')
+	if (c == '+' || ft_isdigit(c))
 		return (1);
 	else if (c == '-')
-		return (2);
+		return (-1);
 	else
 		return (0);
 }
@@ -42,18 +42,22 @@ int	ft_atoi(const char *str)
 	while (ft_isspace(*str))
 		str++;
 	sign = ft_issign(*str);
-	if (sign)
+	if (sign && !ft_isdigit(*str))
 		str++;
 	while (ft_isdigit(*str))
 	{
 		num *= 10;
 		num += *str - '0';
 		str++;
+		if (num < 0)
+		{
+			if (sign == -1)
+				return (0);
+			else
+				return (-1);
+		}
 	}
-	if (sign == 2)
-		return ((int)num * (-1));
-	else
-		return ((int)num);
+	return ((int)num * sign);
 }
 /*
 #include	<stdio.h>
@@ -66,3 +70,5 @@ int main(int argc, char **argv)
 	return (0);
 }
 */
+//os에 따라
+//반환값이 어차피 int

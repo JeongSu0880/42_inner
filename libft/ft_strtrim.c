@@ -6,11 +6,12 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 21:38:02 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/28 17:11:12 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/10/31 15:03:10 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"libft.h"
+#include	<stdio.h>
 
 char	*ft_strchr_2(const char *s, int c)
 {
@@ -53,7 +54,8 @@ char	*ft_strtrim(const char *s1, const char *set)
 
 	start_idx = 0;
 	end_idx = ft_strlen(s1) - 1;
-	if (set != 0)
+	printf("end : %zu\n", end_idx);
+	if (set != 0) // 조건 빼기
 		flag = check_index((char *)s1, (char *)set, &start_idx, &end_idx);
 	arr = (char *)malloc(sizeof(char) * (end_idx - start_idx + 2));
 	if (arr == NULL)
@@ -69,18 +71,18 @@ char	*ft_strtrim(const char *s1, const char *set)
 	*(arr + idx) = '\0';
 	return (arr);
 }
-/*
-#include	<stdio.h>
 
-int	main(void)
-{
-	char	str1[] = "";
-	char	str2[] = "";
-	char	*arr;
+// #include	<stdio.h>
 
-	arr = ft_strtrim(str1, str2);
-	printf("len : %zu", ft_strlen(arr));
-	printf("%s\n", arr);
-	free(arr);
-}
-*/
+// int	main(void)
+// {
+// 	char	str1[] = "";
+// 	char	str2[] = "";
+// 	char	*arr;
+
+// 	arr = ft_strtrim(str1, str2);
+// 	printf("len : %zu", ft_strlen(arr));
+// 	printf("%s\n", arr);
+// 	free(arr);
+// }
+
