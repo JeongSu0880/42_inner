@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 18:41:02 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/17 21:52:43 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/11/02 19:50:44 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 		src_len++;
 	if (src_len + 1 <= size)
 	{
-		ft_memcpy(dest, src, src_len);
+		ft_memmove(dest, src, src_len);
 		*(dest + src_len) = '\0';
 	}
 	else if (size >= 1)
 	{
-		ft_memcpy(dest, src, size - 1);
+		ft_memmove(dest, src, size - 1);
 		*(dest + size - 1) = '\0';
 	}
 	return (src_len);

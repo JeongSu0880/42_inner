@@ -6,52 +6,48 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 21:06:58 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/31 14:20:24 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/11/04 14:38:12 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"libft.h"
 
-static void	alloc_value(char *arr1, char *arr2, size_t len)
+static void	put_value(char *malloc_arr, char *original_arr, size_t len)
 {
 	size_t	idx;
 
 	idx = 0;
 	while (idx + 1 < len)
 	{
-		*(arr1 + idx) = *(arr2 + idx);
+		*(malloc_arr + idx) = *(original_arr + idx);
 		idx++;
 	}
-	*(arr1 + idx) = '\0';
+	*(malloc_arr + idx) = '\0';
 }
 
 char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
-	char	*arr;
+	char	*result;
 
+	if (s == NULL)
+		return (0);
 	if (start >= ft_strlen(s))
 	{
-		arr = (char *)malloc(1);
-		if (arr == NULL)
+		result = (char *)malloc(1);
+		if (result == NULL)
 			return (0);
-		*arr = '\0';
-		return (arr);
+		*result = '\0';
+		return (result);
 	}
-	else if (ft_strlen(s + start) <= len)
-	{
-		arr = (char *)malloc(sizeof(char) * (ft_strlen(s + start) + 1));
-		if (arr == NULL)
-			return (0);
-		alloc_value(arr, (char *)(s + start), ft_strlen(s + start) + 1);
-	}
+	if (ft_strlen(s + start) <= len)
+		len = ft_strlen(s + start) + 1;
 	else
-	{
-		arr = (char *)malloc(sizeof(char) * (len + 1));
-		if (arr == NULL)
-			return (0);
-		alloc_value(arr, (char *)(s + start), len + 1);
-	}
-	return (arr);
+		len = len + 1;
+	result = (char *)malloc(sizeof(char) * len);
+	if (result == NULL)
+		return (0);
+	put_value(result, (char *)(s + start), len);
+	return (result);
 }
 /*
 #include	<stdio.h>

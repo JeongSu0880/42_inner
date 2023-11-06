@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 21:18:26 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/28 17:10:47 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/11/04 15:13:07 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,28 @@
 char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char	*arr;
-	size_t	idx1;
-	size_t	idx2;
+	size_t	s1_idx;
+	size_t	s2_idx;
 	size_t	len;
 
-	idx1 = 0;
-	idx2 = 0;
+	s1_idx = 0;
+	s2_idx = 0;
 	len = ft_strlen(s1) + ft_strlen(s2);
 	arr = (char *)malloc(sizeof(char) * (len + 1));
 	if (arr == NULL)
 		return (0);
-	while (idx1 < len)
+	while (s1_idx < len)
 	{
-		if (idx1 < ft_strlen(s1))
-			*(arr + idx1) = *(s1 + idx1);
-		else
+		if (s1_idx < ft_strlen(s1))
+			*(arr + s1_idx) = *(s1 + s1_idx);
+		else if (*(s2 + s2_idx))
 		{
-			*(arr + idx1) = *(s2 + idx2);
-			idx2++;
+			*(arr + s1_idx) = *(s2 + s2_idx);
+			s2_idx++;
 		}
-		idx1++;
+		s1_idx++;
 	}
-	*(arr + idx1) = '\0';
+	*(arr + s1_idx) = '\0';
 	return (arr);
 }
 /*

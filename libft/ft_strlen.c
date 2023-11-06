@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 13:26:13 by jungslee          #+#    #+#             */
-/*   Updated: 2023/11/02 16:50:38 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/11/02 19:41:55 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ size_t	ft_strlen(const char *str)
 		cnt++;
 	return (cnt);
 }
-
+/*
 #include	<string.h>
 #include	<stdio.h>
 
@@ -31,4 +31,4 @@ int	main(void)
 	printf("ft : %lu\n", ft_strlen(str));
 	printf("original : %lu\n", strlen(str));
 }
-
+*/

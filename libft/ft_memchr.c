@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:17:20 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/21 18:50:38 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/11/02 20:05:24 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ void	*ft_memchr(const void *s, int c, size_t n)
 
 int main(void)
 {
-	char str[] = "memchr!!";
+	char str[] = "a0a";
 	char c = 'e';
 
-	printf("ft : %p\n", ft_memchr(str, c, 3));
-	printf("original : %p\n", memchr(str, c, 3));
+	printf("ft : %p\n", ft_memchr(str, 97, 0));
+	printf("original : %p\n", memchr(str, 97, 0));
 }
 */
