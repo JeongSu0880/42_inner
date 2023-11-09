@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/06 22:16:07 by jungslee          #+#    #+#             */
-/*   Updated: 2023/11/06 22:32:07 by jungslee         ###   ########.fr       */
+/*   Created: 2023/11/08 20:21:16 by jungslee          #+#    #+#             */
+/*   Updated: 2023/11/09 18:37:25 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"libft.h"
 
-t_list	*ft_lstnew(void *content)
+t_list	*ft_lstlast(t_list *lst)
 {
-	t_list	new_node;
-	t_list	*
+	t_list	*pointer;
 
-	new_node
+	if (lst == NULL)
+		return (NULL);
+	pointer = lst;
+	while (pointer->next != NULL)
+		pointer = pointer->next;
+	return (pointer);
 }
