@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 20:21:57 by jungslee          #+#    #+#             */
-/*   Updated: 2023/11/08 20:36:29 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/11/10 18:21:42 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,17 @@
 
 void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	int		idx;
-	int		len;
 	t_list	*del_pointer;
 	t_list	*tmp;
 
-	len = ft_lstsize(*lst);
+	if (!lst || !del)
+		return ;
 	del_pointer = *lst;
-	idx = 0;
-	while (idx < len)
+	while (del_pointer != NULL)
 	{
 		tmp = del_pointer->next;
 		ft_lstdelone(del_pointer, del);
 		del_pointer = tmp;
-		idx++;
 	}
-	lst = NULL;
+	*lst = NULL;
 }
