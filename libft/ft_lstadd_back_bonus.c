@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 20:21:32 by jungslee          #+#    #+#             */
-/*   Updated: 2023/11/10 20:42:00 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/11/12 12:29:04 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	}
 	add_pointer = ft_lstlast(*lst);
 	add_pointer->next = new;
-	if (new->next == NULL)
-		printf("맞는데?????\n");
 }
 // #include	<stdio.h>
 // int main()
