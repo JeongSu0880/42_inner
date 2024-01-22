@@ -6,7 +6,7 @@
 /*   By: jungslee <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 14:18:54 by jungslee          #+#    #+#             */
-/*   Updated: 2023/10/21 20:46:34 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:26:49 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,17 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	else
 		return (src_len + size);
 }
-/*
+
 #include	<string.h>
 #include	<stdio.h>
 
 int	main(void)
 {
-	char	str1[8] = "abc";
+	char	str1[8] = "";
 	char	str2[8] = "abc";
 	char	cat[] = "def";
 
 	printf("ft result : %lu, cat : %s\n", ft_strlcat(str1, cat, 6), str1);
 	printf("original result : %lu, cat : %s\n", strlcat(str2, cat, 6), str2);
 }
-*/
+

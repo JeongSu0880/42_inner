@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 21:18:26 by jungslee          #+#    #+#             */
-/*   Updated: 2023/11/04 15:13:07 by jungslee         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:21:32 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*ft_strjoin(const char *s1, const char *s2)
 
 int	main(void)
 {
-	char	str1[] = "aaaaa";
+	char	str1[] = "";
 	char	str2[] = "bbb";
 	char	*result = ft_strjoin(str1, str2);
 
