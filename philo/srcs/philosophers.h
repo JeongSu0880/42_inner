@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/12 17:12:06 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/15 18:38:28 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,6 @@
 # include <stdio.h>
 # include <string.h>
 
-typedef struct s_philo
-{
-	pthread_t	thread;
-	int			id;
-	int			eat;
-	int			sleep;
-	int			think;
-	int			die;
-	int			num_eat;
-}	t_philo;
-
 typedef struct s_fork
 {
 	pthread_mutex_t	mutex;
@@ -43,24 +32,47 @@ typedef struct s_dead
 	int				is_dead;
 }	t_dead;
 
-typedef struct s_state
+typedef struct	s_error
+{
+	pthread_mutex_t mutex;
+	int				is_error;
+}	t_error;
+
+typedef struct s_share
 {
 	struct s_fork	*fork;
 	struct s_dead	dead;
+	struct s_error	error;
+	pthread_mutex_t	print_mutex;
 	int				num_of_philo;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				num_flag;
 	int				num_of_eat;
-}	t_state;
+}	t_share;
+
+typedef struct s_philo
+{
+	t_share			*share;
+	pthread_t		thread;
+	int				id;
+	int				eat;
+	int				sleep;
+	int				starve;
+	int				num_eat;
+	int				last_eat;
+	struct s_fork	*r_fork;
+	struct s_fork	*l_fork;
+}	t_philo;
 
 /*argument_check_and_init.c*/
-int	init_all(t_state *state, t_philo **philo);
+int	init_all(t_share *share, t_philo **philo);
 int	check_argument_validity_and_init_input(int argc, char *argv[], \
-											t_state *state);
+											t_share *share);
 
 /*error.c*/
 int	argument_error_return(void);
+int	handle_error(char *str, t_share *share);
 
 #endif
