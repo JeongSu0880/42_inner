@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:10 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/16 18:00:14 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/16 21:57:22 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,14 @@ void	*philo_behave(void *philo)
 	//홀수 왼쪽 짝수 오른쪽부터 먹기
 	// 바로 전에 먹은 다음은 바로 자야 해!
 	// 자고 난 다음은 바로 띵크 해야해!
+	// if (me->id % 2 == 1)
+	// {
+		
+	// }
+	// else if (me->id % 2 == 0)
+	// {
+
+	// }
 	if (me->id % 2 == 1)
 	{
 		while (1)
@@ -61,24 +69,29 @@ void	*philo_behave(void *philo)
 			if (me->l_fork->fork_stat == 0 && me->r_fork->fork_stat == 0)
 				can_eat = hold_both_fork(me);
 			if (can_eat == 1)
+			{
 				philo_eat(philo);
-			else
 				philo_sleep(philo);
-			philo_think(philo);
+			}
+			else
+				philo_think(philo);
 			//think 하기
 		}
 	}
 	else if (me->id % 2 == 0)
 	{
+		philo_think(philo);
 		while (1)
 		{
-			philo_think(philo);
 			if (me->l_fork->fork_stat == 0 && me->r_fork->fork_stat == 0)
 				can_eat = hold_both_fork(me);
 			if (can_eat == 1)
+			{
 				philo_eat(philo);
-			else
 				philo_sleep(philo);
+			}
+			else
+				philo_think(philo);
 		}
 	}
 	//죽는 조건
@@ -102,6 +115,38 @@ int	start_all_thread(t_philo *philo, t_share *share)
 	return (0);
 }
 
+void	*monitor_behave(void *arg)
+{
+	t_philo *philo;
+	int		num_philo;
+	// intresult;
+
+	philo = (t_philo *)arg;
+	num_philo = philo[0].share->num_of_philo;
+	//모니터링 스레드 생성
+		// 하는 역할 = 죽은 철학자가 있는지 체크         
+		// 횟횟수만큰 먹었는지 체크
+		// ㅇㅔ러 발발생생했했으면 끝내기
+	int	i;
+
+	i = 0;
+	while (i < num_philo)
+	{
+		pthread_join(&(philo[i].thread), NULL);
+		i++;
+	}
+}
+
+int	start_monitoring(pthread_t *monitor, t_share *share, t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	if (pthread_create(monitor, NULL, monitor_behave, (void *)philo) != 0)
+		return (handle_error("pthread_create error", share));
+	return (0);
+}
+
 // void	wait_thread_end(t_philo *philo, t_share *share)
 // {
 	
@@ -120,16 +165,13 @@ int	main(int argc, char *argv[])
 		return (argument_error_return());
 	if (init_all(&share, &philo) == -1)
 		return (0);
-	// start_monitoring(&monitor, philo);
-	/*if (start_all_thread(philo, &share) == -1)
+	start_monitoring(&monitor, &share, philo);
+	if (start_all_thread(philo, &share) == -1)
 		return (-1);// TODO 다정리!!!!!!!!!!!!!!!!!!!!!!! free 함수 만들기
-	pthread_join(monitor, (void **)&result);*/
+	pthread_join(monitor, (void **)&result);
 	// wait_thread_end(philo, &share);
-	print_philo(philo, share.num_of_philo);//지워라
-	//모니터링 스레드 생성
-		// 하는 역할 = 죽은 철학자가 있는지 체크           
-		// 횟횟수만큰 먹었는지 체크
-		// ㅇㅔ러 발발생생했했으면 끝내기
+	// print_philo(philo, share.num_of_philo);//지워라
+
 	//철학자 생성. 및 실행 함수 만들기 pthread_creat
 		//-> 실행함수로 들어가서 동작 시작...]
 	//스레드 끝날때까지 기다림 -> 하나가 죽었거나, 정해진 횟수만큼 먹었거나, 어떤 에러가 발생했거나
@@ -139,3 +181,4 @@ int	main(int argc, char *argv[])
 // 프린트 하기 
 // get_time_of_day 하기
 // 가장 마지막에 먹은 시간..
+// 에러 처리 함수 정리하기.. 하나로...
