@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:06:01 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/15 18:08:00 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:48:40 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int	init_all(t_share *share, t_philo **philo)
 	{
 		pthread_mutex_init(&share->fork[i].mutex, NULL);
 		share->fork[i].fork_stat = 0;
+		share->fork[i].reach = 0;
 		(*philo)[i].share = share;
 		(*philo)[i].id = i;
 		init_one_philo(&((*philo)[i]), share);

@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:10 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/15 18:42:30 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/16 18:00:14 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,37 +20,66 @@ void	print_philo(t_philo *philo, int num)//지워라
 		printf("philo id : %d\n", philo[i].id);
 		printf("philo eat : %d\n", philo[i].eat);
 		printf("philo sleep : %d\n", philo[i].sleep);
-		// printf("philo think : %d\n", philo[i].think);
 		printf("philo die : %d\n", philo[i].starve);
 		printf("philo num_eat : %d\n", philo[i].num_eat);
 		printf("---------------------------------\n");
 	}
 }
 
-void	hold_both_fork(t_philo *philo)
+int	hold_both_fork(t_philo *philo)
 {
-	
+	int	success;
+
+	success = 0;
+	reach_hand_right(philo);
+	if (philo->l_fork->fork_stat == 0 && philo->l_fork->reach == 0)
+		reach_hand_left(philo);
+	else
+		fold_arm_right(philo);
+	if (philo->r_fork->reach == 1 && philo->l_fork->reach == 1)
+	{
+		hold_right_fork(philo);
+		hold_left_fork(philo);
+		success = 1;
+	}
+	return (success);
 }
 
 void	*philo_behave(void *philo)
 {
 	t_philo	*me;
+	int		can_eat;
 
 	me = (t_philo *)philo;
-	// me->l_fork = me->share.fork[me->id];
-	// if (me->id == 0)
-	// 	me->r_fork = me->share.fork[me->id - 1 + me->share.num_of_philo];
-	// else
-	// 	me->r_fork = me->share.fork[me->id - 1];
 	//홀수 왼쪽 짝수 오른쪽부터 먹기
 	// 바로 전에 먹은 다음은 바로 자야 해!
 	// 자고 난 다음은 바로 띵크 해야해!
 	if (me->id % 2 == 1)
 	{
-		if (me->l_fork->fork_stat == 0 && me->r_fork->fork_stat == 0)
-			hold_both_fork();
-		// ㅇㅑㅇ쪼ㄱ 포크다 둘 다 남아있다면
-		//한번에 집기.
+		while (1)
+		{
+			if (me->l_fork->fork_stat == 0 && me->r_fork->fork_stat == 0)
+				can_eat = hold_both_fork(me);
+			if (can_eat == 1)
+				philo_eat(philo);
+			else
+				philo_sleep(philo);
+			philo_think(philo);
+			//think 하기
+		}
+	}
+	else if (me->id % 2 == 0)
+	{
+		while (1)
+		{
+			philo_think(philo);
+			if (me->l_fork->fork_stat == 0 && me->r_fork->fork_stat == 0)
+				can_eat = hold_both_fork(me);
+			if (can_eat == 1)
+				philo_eat(philo);
+			else
+				philo_sleep(philo);
+		}
 	}
 	//죽는 조건
 	// starve 타임 찼을 때
@@ -100,9 +129,13 @@ int	main(int argc, char *argv[])
 	//모니터링 스레드 생성
 		// 하는 역할 = 죽은 철학자가 있는지 체크           
 		// 횟횟수만큰 먹었는지 체크
-		//
+		// ㅇㅔ러 발발생생했했으면 끝내기
 	//철학자 생성. 및 실행 함수 만들기 pthread_creat
 		//-> 실행함수로 들어가서 동작 시작...]
 	//스레드 끝날때까지 기다림 -> 하나가 죽었거나, 정해진 횟수만큼 먹었거나, 어떤 에러가 발생했거나
 	// 어쨌든 다 할당 해지 하고 스레드, 뮤텍스 죽여야함.
 }
+
+// 프린트 하기 
+// get_time_of_day 하기
+// 가장 마지막에 먹은 시간..

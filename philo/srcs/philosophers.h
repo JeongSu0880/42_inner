@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/15 18:38:28 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:55:50 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_fork
 {
 	pthread_mutex_t	mutex;
 	int				fork_stat;
+	int				reach;
 }	t_fork;
 
 typedef struct s_dead
@@ -72,7 +73,16 @@ int	check_argument_validity_and_init_input(int argc, char *argv[], \
 											t_share *share);
 
 /*error.c*/
-int	argument_error_return(void);
-int	handle_error(char *str, t_share *share);
+int		argument_error_return(void);
+int		handle_error(char *str, t_share *share);
+void	set_error(t_error *error);
+
+/*action.c*/
+void	reach_hand_right(t_philo *philo);
+void	reach_hand_left(t_philo *philo);
+void	fold_arm_right(t_philo *philo);
+void	fold_arm_left(t_philo *philo);
+void	hold_fork_right(t_philo *philo);
+void	hold_fork_left(t_philo *philo);
 
 #endif
