@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/16 16:55:50 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:41:40 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,15 @@ void	fold_arm_right(t_philo *philo);
 void	fold_arm_left(t_philo *philo);
 void	hold_fork_right(t_philo *philo);
 void	hold_fork_left(t_philo *philo);
+
+/*utils.c*/
+int		ft_gettime(void);
+char	*ph_itoa(int n);
+int		is_philo_terminated(t_philo *philo, int *not_eat);
+int		ft_usleep(int ms, t_philo *philo, int *not_eat);
+int		ft_usleep_thinking(t_philo *philo, int *not_eat);
+
+int	philo_die(t_philo *philo, int *dead_flag);
+int	hold_both_fork(t_philo *philo);
 
 #endif

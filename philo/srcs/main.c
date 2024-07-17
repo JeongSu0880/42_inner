@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:10 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/16 21:57:22 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:45:41 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,60 +38,122 @@ int	hold_both_fork(t_philo *philo)
 		fold_arm_right(philo);
 	if (philo->r_fork->reach == 1 && philo->l_fork->reach == 1)
 	{
-		hold_right_fork(philo);
-		hold_left_fork(philo);
+		hold_fork_right(philo);
+		hold_fork_left(philo);
 		success = 1;
 	}
 	return (success);
 }
 
+int	philo_die(t_philo *philo, int *dead_flag)
+{
+	int	start;
+
+	start = ft_gettime();
+	pthread_mutex_lock(&(philo->share->dead.mutex));
+	*dead_flag = 1;//TODO 이렇게 해도 바뀌나??
+	pthread_mutex_unlock(&(philo->share->dead.mutex));
+	pthread_mutex_lock(&(philo->share->print_mutex));
+	printf("%dms [%d]philo died\n", start, philo->id + 1);
+	pthread_mutex_unlock(&(philo->share->print_mutex));
+	return (-1);
+}
+
+int	philo_eat(t_philo *philo, int *not_eat)
+{
+	int		start;
+
+	if (is_philo_terminated(philo, not_eat) == 1)
+		return (-1);
+	start = ft_gettime();
+	pthread_mutex_lock(&(philo->share->print_mutex));
+	printf("%dms [%d]philo is eating\n", start, philo->id + 1);
+	pthread_mutex_unlock(&(philo->share->print_mutex));
+	ft_usleep(philo->eat, philo, not_eat);
+	*not_eat = philo->eat;
+	philo->last_eat = start;
+	return (0);
+}
+
+int	philo_sleep(t_philo *philo, int *not_eat)
+{
+	int		start;
+
+	if (is_philo_terminated(philo, not_eat) == 1)
+		return (-1);
+	if ((*not_eat + philo->sleep) >= philo->starve)
+		return (philo_die(philo, &(philo->share->dead.is_dead)));
+	start = ft_gettime();
+	pthread_mutex_lock(&(philo->share->print_mutex));
+	printf("%dms [%d]philo is sleeping\n", start, philo->id + 1);
+	pthread_mutex_unlock(&(philo->share->print_mutex));
+	ft_usleep(philo->sleep, philo, not_eat);
+	*not_eat = ft_gettime() - start + *not_eat;
+	return (0);
+}
+
+int	philo_think(t_philo *philo, int *not_eat)
+{
+	int		start;
+
+	if (is_philo_terminated(philo, not_eat) == 1)
+		return (-1);
+	start = ft_gettime();
+	pthread_mutex_lock(&(philo->share->print_mutex));
+	printf("%dms [%d]philo is thinking\n", start, philo->id + 1);
+	pthread_mutex_unlock(&(philo->share->print_mutex));
+	ft_usleep_thinking(philo, not_eat);
+	//여긴 좀 다르게!
+	// 먹을 수 있을 때 먹되, 가장 오래 굶은 애가 먹어야함.
+	*not_eat = ft_gettime() - start + *not_eat;
+	return (0);
+}
+
 void	*philo_behave(void *philo)
 {
 	t_philo	*me;
+	int		not_eat;
 	int		can_eat;
 
 	me = (t_philo *)philo;
+	not_eat = 0;
 	//홀수 왼쪽 짝수 오른쪽부터 먹기
 	// 바로 전에 먹은 다음은 바로 자야 해!
 	// 자고 난 다음은 바로 띵크 해야해!
-	// if (me->id % 2 == 1)
-	// {
-		
-	// }
-	// else if (me->id % 2 == 0)
-	// {
-
-	// }
 	if (me->id % 2 == 1)
 	{
 		while (1)
 		{
+			if (is_philo_terminated(philo, &not_eat) == 1)
+				return (0);
 			if (me->l_fork->fork_stat == 0 && me->r_fork->fork_stat == 0)
 				can_eat = hold_both_fork(me);
 			if (can_eat == 1)
 			{
-				philo_eat(philo);
-				philo_sleep(philo);
+				philo_eat(philo, &not_eat);
+				philo_sleep(philo, &not_eat);
 			}
 			else
-				philo_think(philo);
+				philo_think(philo, &not_eat);
 			//think 하기
 		}
 	}
 	else if (me->id % 2 == 0)
 	{
-		philo_think(philo);
+		philo_think(philo, &not_eat);
 		while (1)
 		{
+			if (is_philo_terminated(philo, &not_eat) == 1)
+				return (0);
 			if (me->l_fork->fork_stat == 0 && me->r_fork->fork_stat == 0)
 				can_eat = hold_both_fork(me);
 			if (can_eat == 1)
 			{
-				philo_eat(philo);
-				philo_sleep(philo);
+				philo_eat(philo, &not_eat);
+				philo_sleep(philo, &not_eat);
 			}
 			else
-				philo_think(philo);
+				philo_think(philo, &not_eat);
 		}
 	}
 	//죽는 조건
@@ -99,6 +161,7 @@ void	*philo_behave(void *philo)
 	// 
 
 	//에러 처리
+	return (0);
 }
 
 int	start_all_thread(t_philo *philo, t_share *share)
@@ -119,6 +182,7 @@ void	*monitor_behave(void *arg)
 {
 	t_philo *philo;
 	int		num_philo;
+	int		i;
 	// intresult;
 
 	philo = (t_philo *)arg;
@@ -127,14 +191,13 @@ void	*monitor_behave(void *arg)
 		// 하는 역할 = 죽은 철학자가 있는지 체크         
 		// 횟횟수만큰 먹었는지 체크
 		// ㅇㅔ러 발발생생했했으면 끝내기
-	int	i;
-
 	i = 0;
 	while (i < num_philo)
 	{
-		pthread_join(&(philo[i].thread), NULL);
+		pthread_join(philo[i].thread, NULL);
 		i++;
 	}
+	return (0);
 }
 
 int	start_monitoring(pthread_t *monitor, t_share *share, t_philo *philo)
@@ -182,3 +245,5 @@ int	main(int argc, char *argv[])
 // get_time_of_day 하기
 // 가장 마지막에 먹은 시간..
 // 에러 처리 함수 정리하기.. 하나로...
+// 포크 들때 프린트 해줘야하고
+// 먹는 횟수 들어오면 그만큼 하면 멈춰줘야함.
