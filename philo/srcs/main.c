@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:10 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/17 17:45:41 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/18 22:34:17 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,80 +32,89 @@ int	hold_both_fork(t_philo *philo)
 
 	success = 0;
 	reach_hand_right(philo);
-	if (philo->l_fork->fork_stat == 0 && philo->l_fork->reach == 0)
+	if (check_fork_stat(philo->l_fork, philo->r_fork))
 		reach_hand_left(philo);
 	else
 		fold_arm_right(philo);
-	if (philo->r_fork->reach == 1 && philo->l_fork->reach == 1)
+	if (check_reach_done(philo->l_fork, philo->r_fork))
 	{
 		hold_fork_right(philo);
+		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
 		hold_fork_left(philo);
+		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
 		success = 1;
 	}
+	// dprintf(2, "philo %d success %d\n", philo->id, success);
 	return (success);
 }
 
 int	philo_die(t_philo *philo, int *dead_flag)
 {
-	int	start;
-
-	start = ft_gettime();
 	pthread_mutex_lock(&(philo->share->dead.mutex));
 	*dead_flag = 1;//TODO 이렇게 해도 바뀌나??
 	pthread_mutex_unlock(&(philo->share->dead.mutex));
 	pthread_mutex_lock(&(philo->share->print_mutex));
-	printf("%dms [%d]philo died\n", start, philo->id + 1);
+	printf("%zu %d died\n", ft_gettime() - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));
 	return (-1);
 }
 
 int	philo_eat(t_philo *philo, int *not_eat)
 {
-	int		start;
+	size_t		start;
 
 	if (is_philo_terminated(philo, not_eat) == 1)
 		return (-1);
-	start = ft_gettime();
 	pthread_mutex_lock(&(philo->share->print_mutex));
-	printf("%dms [%d]philo is eating\n", start, philo->id + 1);
+	start = ft_gettime();//TODO ㅇㅣ ㅂㅜ부ㄴ 어케해..
+	printf("%zu %d is eating\n", start - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));
 	ft_usleep(philo->eat, philo, not_eat);
+	philo->num_eat++;
 	*not_eat = philo->eat;
 	philo->last_eat = start;
 	return (0);
 }
 
+//죽으면 출력이 더이상 되면 안됨
+//mutex_lock(write);
+//if (is_die())
+//printf();
+//mutex_unlock(write);
+
 int	philo_sleep(t_philo *philo, int *not_eat)
 {
-	int		start;
+	size_t	start;
 
 	if (is_philo_terminated(philo, not_eat) == 1)
 		return (-1);
 	if ((*not_eat + philo->sleep) >= philo->starve)
 		return (philo_die(philo, &(philo->share->dead.is_dead)));
-	start = ft_gettime();
 	pthread_mutex_lock(&(philo->share->print_mutex));
-	printf("%dms [%d]philo is sleeping\n", start, philo->id + 1);
+	start = ft_gettime();//TODO 이부분 어떡하지
+	printf("%zu %d is sleeping\n", start - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));
+	// printf("sleep : usleep %d \n", philo->sleep);
 	ft_usleep(philo->sleep, philo, not_eat);
-	*not_eat = ft_gettime() - start + *not_eat;
+	// *not_eat = ft_gettime() - start + *not_eat;
 	return (0);
 }
 
 int	philo_think(t_philo *philo, int *not_eat)
 {
-	int		start;
+	size_t		start;
 
 	if (is_philo_terminated(philo, not_eat) == 1)
 		return (-1);
-	start = ft_gettime();
 	pthread_mutex_lock(&(philo->share->print_mutex));
-	printf("%dms [%d]philo is thinking\n", start, philo->id + 1);
+	start = ft_gettime();
+	printf("%zu %d is thinking\n", start - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));
-	ft_usleep_thinking(philo, not_eat);
+	if (ft_usleep_thinking(philo, not_eat))
+		return (1);
 	//여긴 좀 다르게!
 	// 먹을 수 있을 때 먹되, 가장 오래 굶은 애가 먹어야함.
-	*not_eat = ft_gettime() - start + *not_eat;
+	// *not_eat = ft_gettime() - start + *not_eat;
 	return (0);
 }
 
@@ -117,43 +126,64 @@ void	*philo_behave(void *philo)
 
 	me = (t_philo *)philo;
 	not_eat = 0;
+	can_eat = 0;
+	me->birth = ft_gettime();
 	//홀수 왼쪽 짝수 오른쪽부터 먹기
 	// 바로 전에 먹은 다음은 바로 자야 해!
 	// 자고 난 다음은 바로 띵크 해야해!
-	if (me->id % 2 == 1)
+	if (me->id % 2 == 0)
 	{
 		while (1)
 		{
+			if (me->share->num_flag == 1 && me->num_eat == me->share->num_of_eat)
+				return (0);
 			if (is_philo_terminated(philo, &not_eat) == 1)
 				return (0);
-			if (me->l_fork->fork_stat == 0 && me->r_fork->fork_stat == 0)
+			if (check_fork_stat(me->l_fork, me->r_fork))
 				can_eat = hold_both_fork(me);
 			if (can_eat == 1)
 			{
 				philo_eat(philo, &not_eat);
+				fold_arm_left(philo);
+				fold_arm_right(philo);
+				put_fork_down_left(philo);
+				put_fork_down_right(philo);
+				can_eat = 0;
 				philo_sleep(philo, &not_eat);
 			}
 			else
-				philo_think(philo, &not_eat);
-			//think 하기
+				can_eat = philo_think(philo, &not_eat);
 		}
 	}
-	else if (me->id % 2 == 0)
+	else if (me->id % 2 == 1)
 	{
-		philo_think(philo, &not_eat);
+		can_eat = philo_think(philo, &not_eat);
 		while (1)
 		{
+			if (me->share->num_flag == 1 && me->num_eat == me->share->num_of_eat)
+				return (0);
 			if (is_philo_terminated(philo, &not_eat) == 1)
 				return (0);
-			if (me->l_fork->fork_stat == 0 && me->r_fork->fork_stat == 0)
-				can_eat = hold_both_fork(me);
-			if (can_eat == 1)
+			if (check_fork_stat(me->l_fork, me->r_fork))
 			{
+				can_eat = hold_both_fork(me);
+			}
+			// dprintf(2, "can_eat ::: %d\n", can_eat);
+			if (can_eat == 1)
+			{	
 				philo_eat(philo, &not_eat);
+				put_fork_down_left(philo);
+				put_fork_down_right(philo);
+				fold_arm_left(philo);
+				fold_arm_right(philo);
+				can_eat = 0;
 				philo_sleep(philo, &not_eat);
 			}
 			else
-				philo_think(philo, &not_eat);
+			{
+				can_eat = philo_think(philo, &not_eat);
+				// dprintf(2, "can_eat ::: %d\n", can_eat);
+			}
 		}
 	}
 	//죽는 조건
@@ -168,12 +198,13 @@ int	start_all_thread(t_philo *philo, t_share *share)
 {
 	int	i;
 
+	i = 0;
+		// dprintf(2, "왈루깔루\n");
 	while (i < share->num_of_philo)
 	{
 		if (pthread_create(&(philo[i].thread), NULL, philo_behave, (void *)&(philo[i])) < 0)
 			return (handle_error("pthread_create error", share));
 		i++;
-		usleep(5);// TODO 이거 하는게 맞나.
 	}
 	return (0);
 }
@@ -226,11 +257,15 @@ int	main(int argc, char *argv[])
 	philo = NULL;
 	if (check_argument_validity_and_init_input(argc, argv, &share) == -1)
 		return (argument_error_return());
+	// dprintf(2, "왈루깔루\n");
 	if (init_all(&share, &philo) == -1)
 		return (0);
+	// dprintf(2, "왈루깔루\n");
 	start_monitoring(&monitor, &share, philo);
+	// dprintf(2, "왈루깔루\n");
 	if (start_all_thread(philo, &share) == -1)
-		return (-1);// TODO 다정리!!!!!!!!!!!!!!!!!!!!!!! free 함수 만들기
+		return (-1);// TODO 다정리!!!!!!!!!!!!!!!!!!!!!!! free 함수 만들기\addinde
+	// dprintf(2, "왈루깔루\n");
 	pthread_join(monitor, (void **)&result);
 	// wait_thread_end(philo, &share);
 	// print_philo(philo, share.num_of_philo);//지워라

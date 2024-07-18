@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:06:01 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/16 15:48:40 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/18 22:33:31 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,12 @@ void	init_one_philo(t_philo *philo, t_share *share)
 	philo->sleep = share->time_to_sleep;
 	philo->starve = share->time_to_die;
 	if (share->num_flag == 1)
-		philo->num_eat = share->num_of_eat;
-	philo->l_fork = &(share->fork[philo->id]);
-	if (philo->id == 0)
-		philo->r_fork = &(share->fork[philo->id - 1 + share->num_of_philo]);
+		philo->num_eat = 0;
+	philo->l_fork = &(share->fork[philo->id - 1]);
+	if (philo->id == 1)
+		philo->r_fork = &(share->fork[share->num_of_philo - 1]);
 	else
-		philo->r_fork = &(share->fork[philo->id - 1]);
+		philo->r_fork = &(share->fork[philo->id - 2]);
 }
 
 int	init_all(t_share *share, t_philo **philo)
@@ -105,7 +105,7 @@ int	init_all(t_share *share, t_philo **philo)
 		share->fork[i].fork_stat = 0;
 		share->fork[i].reach = 0;
 		(*philo)[i].share = share;
-		(*philo)[i].id = i;
+		(*philo)[i].id = i + 1;
 		init_one_philo(&((*philo)[i]), share);
 		i++;
 	}

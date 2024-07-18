@@ -6,22 +6,19 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 21:06:38 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/17 17:37:52 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/18 22:17:10 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-// int	is_philo_terminated(t_philo *philo)
-// {
-	
-// }
-
-int	ft_gettime(void)
+size_t	ft_gettime(void)
 {
 	struct timeval	time;
 
+	// memset(&time, 0, sizeof(struct timeval));
 	gettimeofday(&time, NULL);
+	// printf("TIME:::%ld\n", time.tv_sec * 1000 + time.tv_usec / 1000);
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
@@ -39,15 +36,16 @@ int	is_philo_terminated(t_philo *philo, int *not_eat)
 
 int	ft_usleep(int ms, t_philo *philo, int *not_eat)
 {
-	int	start;
+	size_t	start;
 
 	start = ft_gettime();
+	// dprintf(2,"asdasdasd\n");
 	while (ft_gettime() - start < ms)
 	{
-		if (is_philo_terminated(philo, not_eat))
-			break ;
+		// if (is_philo_terminated(philo, not_eat))
+		// 	break ;
 		usleep(250);
-		*not_eat += ft_gettime() - start;
+		*not_eat = ft_gettime() - start;
 	}
 	return (0);
 }
@@ -63,64 +61,18 @@ int	ft_usleep_thinking(t_philo *philo, int *not_eat)
 	{
 		if (is_philo_terminated(philo, not_eat))
 			break ;
-		if (philo->l_fork->fork_stat == 0 && philo->r_fork->fork_stat == 0)
+		if (check_fork_stat(philo->l_fork, philo->r_fork))//TODO 뮤텍스
 		{
 			can_eat = hold_both_fork(philo);
 			if (can_eat == 1)// 여기에 가장 오래 굶은 철학자가 먼저 먹게 하는 조건 추가.
-				break ;
+			{
+				// printf("asdfasdf\n");				
+				return (1);
+			}
 		}
 		usleep(250);
-		*not_eat += ft_gettime() - start;
+		//printf("시간 ? %zu\n", ft_gettime() - philo->birth);
+		*not_eat = ft_gettime() - start;
 	}
 	return (0);
 }
-
-// static void	cnt_num(long long tmp_num, size_t *cnt)
-// {
-// 	while (tmp_num)
-// 	{
-// 		(*cnt)++;
-// 		tmp_num = tmp_num / 10;
-// 	}
-// }
-
-// static void	transfer(char *result, int cnt, long long tmp)
-// {
-// 	int	idx;
-
-// 	idx = cnt - 1;
-// 	while (idx >= 0)
-// 	{
-// 		*(result + idx) = tmp % 10 + '0';
-// 		tmp = tmp / 10;
-// 		idx--;
-// 	}
-// 	*(result + cnt) = '\0';
-// }
-
-// char	*ph_itoa(int n)
-// {
-// 	char		*result;
-// 	int			cnt;
-// 	long long	tmp;
-
-// 	cnt = 0;
-// 	tmp = (long long)n;
-// 	cnt_num(tmp, &cnt);
-// 	if (!tmp)
-// 	{
-// 		result = (char *)malloc(sizeof(char) * 2);
-// 		if (result == NULL)
-// 			return (0);
-// 		*result = '0';
-// 		*(result + 1) = '\0';
-// 	}
-// 	else
-// 	{
-// 		result = (char *)malloc(sizeof(char) * (cnt + 1));
-// 		if (result == NULL)
-// 			return (0);
-// 		transfer(result, cnt, tmp);
-// 	}
-// 	return (result);
-// }

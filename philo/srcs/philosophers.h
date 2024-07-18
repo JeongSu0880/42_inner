@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/17 17:41:40 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/18 21:29:58 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct	s_error
 
 typedef struct s_share
 {
-	struct s_fork	*fork;
+	struct s_fork	*fork;//TODO 이거 어케할지
 	struct s_dead	dead;
 	struct s_error	error;
 	pthread_mutex_t	print_mutex;
@@ -58,6 +58,7 @@ typedef struct s_philo
 	t_share			*share;
 	pthread_t		thread;
 	int				id;
+	size_t			birth;
 	int				eat;
 	int				sleep;
 	int				starve;
@@ -84,13 +85,19 @@ void	fold_arm_right(t_philo *philo);
 void	fold_arm_left(t_philo *philo);
 void	hold_fork_right(t_philo *philo);
 void	hold_fork_left(t_philo *philo);
+void	put_fork_down_right(t_philo *philo);
+void	put_fork_down_left(t_philo *philo);
 
 /*utils.c*/
-int		ft_gettime(void);
+size_t		ft_gettime(void);
 char	*ph_itoa(int n);
 int		is_philo_terminated(t_philo *philo, int *not_eat);
 int		ft_usleep(int ms, t_philo *philo, int *not_eat);
 int		ft_usleep_thinking(t_philo *philo, int *not_eat);
+
+/*action_2.c*/
+int	check_reach_done(t_fork *l_fork, t_fork *r_fork);
+int	check_fork_stat(t_fork *l_fork, t_fork *r_fork);
 
 int	philo_die(t_philo *philo, int *dead_flag);
 int	hold_both_fork(t_philo *philo);
