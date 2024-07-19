@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/18 21:29:58 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/19 18:15:27 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_philo
 	int				starve;
 	int				num_eat;
 	int				last_eat;
+	int				pre_behave;
 	struct s_fork	*r_fork;
 	struct s_fork	*l_fork;
 }	t_philo;
