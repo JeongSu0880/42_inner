@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/19 18:15:27 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/22 19:56:48 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ typedef struct s_philo
 	int				sleep;
 	int				starve;
 	int				num_eat;
-	int				last_eat;
+	size_t			last_eat;
 	int				pre_behave;
 	struct s_fork	*r_fork;
 	struct s_fork	*l_fork;
@@ -84,23 +84,22 @@ void	reach_hand_right(t_philo *philo);
 void	reach_hand_left(t_philo *philo);
 void	fold_arm_right(t_philo *philo);
 void	fold_arm_left(t_philo *philo);
-void	hold_fork_right(t_philo *philo);
-void	hold_fork_left(t_philo *philo);
+int	hold_fork_right(t_philo *philo);
+int	hold_fork_left(t_philo *philo);
 void	put_fork_down_right(t_philo *philo);
 void	put_fork_down_left(t_philo *philo);
 
 /*utils.c*/
 size_t		ft_gettime(void);
 char	*ph_itoa(int n);
-int		is_philo_terminated(t_philo *philo, int *not_eat);
-int		ft_usleep(int ms, t_philo *philo, int *not_eat);
-int		ft_usleep_thinking(t_philo *philo, int *not_eat);
+int		is_philo_terminated(t_philo *philo);
+int		ft_usleep(int ms, t_philo *philo);
 
 /*action_2.c*/
 int	check_reach_done(t_fork *l_fork, t_fork *r_fork);
 int	check_fork_stat(t_fork *l_fork, t_fork *r_fork);
 
-int	philo_die(t_philo *philo, int *dead_flag);
+int	philo_die(t_philo *philo, int *dead_flag, int print_flag);
 int	hold_both_fork(t_philo *philo);
 
 #endif

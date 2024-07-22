@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 21:06:38 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/19 16:39:58 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/22 22:45:57 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,29 +20,46 @@ size_t	ft_gettime(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-int	is_philo_terminated(t_philo *philo, int *not_eat)
+int	check_is_dead(t_dead dead)
 {
-	if (*not_eat >= philo->starve)
+	pthread_mutex_lock(&dead.mutex);
+	if (dead.is_dead == 1)
 	{
-		philo_die(philo, &(philo->share->dead.is_dead));
+		pthread_mutex_unlock(&dead.mutex);
 		return (1);
 	}
-	if (philo->share->dead.is_dead == 1)
-		return (1);
+	pthread_mutex_unlock(&dead.mutex);
 	return (0);
 }
 
-int	ft_usleep(int ms, t_philo *philo, int *not_eat)
+int	is_philo_terminated(t_philo *philo)
+{
+	if (check_is_dead(philo->share->dead))
+	{
+		philo_die(philo, &(philo->share->dead.is_dead), 0);
+		return (1);
+	}
+	if (ft_gettime() - philo->last_eat > philo->starve)
+	{
+		philo_die(philo, &(philo->share->dead.is_dead), 1);
+		return (1);
+	}
+	return (0);
+}
+
+int	ft_usleep(int ms, t_philo *philo)
 {
 	size_t	start;
 
 	start = ft_gettime();
 	while (ft_gettime() - start < ms)
 	{
-		if (is_philo_terminated(philo, not_eat))
-			break ;
+		if (is_philo_terminated(philo))
+		{
+			dprintf(2, "usleep\n");//TODO 지워
+			return (-1);
+		}
 		usleep(250);
-		*not_eat = ft_gettime() - start;
 	}
 	return (0);
 }
