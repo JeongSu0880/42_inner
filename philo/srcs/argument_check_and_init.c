@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:06:01 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/19 16:16:16 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/23 19:44:02 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int	init_all(t_share *share, t_philo **philo)
 	i = 0;
 	share->fork = (t_fork *)malloc(sizeof(t_fork) * share->num_of_philo);
 	*philo = (t_philo *)malloc(sizeof(t_philo) * share->num_of_philo);
+	share->dead = (t_dead *)malloc(sizeof(t_dead));
+	share->dead->is_dead = 0;
 	if ((share->fork == NULL || philo == NULL) && share->num_of_philo != 0)
 		return (-1);
 	while (i < share->num_of_philo)
@@ -109,8 +111,8 @@ int	init_all(t_share *share, t_philo **philo)
 		init_one_philo(&((*philo)[i]), share);
 		i++;
 	}
-	pthread_mutex_init(&share->dead.mutex, NULL);
+	pthread_mutex_init(&share->dead->mutex, NULL);
 	pthread_mutex_init(&share->print_mutex, NULL);
-	pthread_mutex_init(&share->error.mutex, NULL);
+	// pthread_mutex_init(&share->error.mutex, NULL);
 	return (0);
 }

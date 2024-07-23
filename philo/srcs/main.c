@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:10 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/22 22:47:17 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/23 19:49:23 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,9 @@ int	hold_both_fork_odd(t_philo *philo)
 
 int	philo_die(t_philo *philo, int *dead_flag, int print_flag)
 {
-	pthread_mutex_lock(&(philo->share->dead.mutex));
+	pthread_mutex_lock(&(philo->share->dead->mutex));
 	*dead_flag = 1;//TODO 이렇게 해도 바뀌나??
-	pthread_mutex_unlock(&(philo->share->dead.mutex));
+	pthread_mutex_unlock(&(philo->share->dead->mutex));
 	if (print_flag == 1)
 	{
 		pthread_mutex_lock(&(philo->share->print_mutex));
@@ -98,7 +98,7 @@ int	philo_sleep(t_philo *philo)
 
 	if (is_philo_terminated(philo) == 1)
 	{
-		dprintf(2, "philo_sleep\n");//TODO 지워
+		// dprintf(2, "philo_sleep\n");//TODO 지워
 		return (-1);
 	}
 	// if ((ft_gettime() - philo->last_eat + philo->sleep) >= philo->starve)
@@ -117,7 +117,7 @@ int	philo_eat(t_philo *philo)
 
 	if (is_philo_terminated(philo) == 1)
 	{
-		dprintf(2, "philo_eat\n");//TODO 지워
+		// dprintf(2, "philo_eat\n");//TODO 지워
 		return (-1);
 	}
 	if (philo->id & 1)
@@ -131,9 +131,10 @@ int	philo_eat(t_philo *philo)
 		printf("%zu %d is eating\n", start - philo->birth, philo->id);
 		pthread_mutex_unlock(&(philo->share->print_mutex));
 		philo->last_eat = start;
-		ft_usleep(philo->eat, philo);
-		put_fork_down_right(philo);
+		if (ft_usleep(philo->eat, philo) == -1)
+			return (-1);
 		put_fork_down_left(philo);
+		put_fork_down_right(philo);
 		philo->num_eat++;
 		// philo_sleep(philo);
 		return (philo_sleep(philo));
@@ -147,7 +148,7 @@ int	philo_think(t_philo *philo)
 
 	if (is_philo_terminated(philo) == 1)
 	{
-		dprintf(2, "philo_think\n");//TODO 지워
+		// dprintf(2, "philo_think\n");//TODO 지워
 		return (-1);
 	}
 	pthread_mutex_lock(&(philo->share->print_mutex));
@@ -162,29 +163,36 @@ void	*philo_behave(void *philo)
 	t_philo	*me;
 	t_share *share;
 	int		pre_behave;
+	int		first;
 
 	me = (t_philo *)philo;
 	share = me->share;
 	me->birth = ft_gettime();
 	me->last_eat = me->birth;
+	first = 0;
 	while (1)
 	{
 		if (share->num_flag == 1 && me->num_eat == share->num_of_eat)
 			return (0);
 		if (is_philo_terminated(philo) == 1)
 		{
-			dprintf(2, "philo_behave\n");//TODO 지워
+			// dprintf(2, "me %d die..!!\n", me->id);//TODO 지워
 			return (0);
 		}
 		pre_behave = philo_eat(philo);
-		dprintf(2, "eat, sleep pre_behave %d\n", pre_behave);
+		// dprintf(2, "%d philo eat, sleep pre_behave %d\n", me->id, pre_behave);
 		if (pre_behave == -1)
 			return (0);
-		if (pre_behave == 1)
+		if (pre_behave == 1 || first == 0)
+		{
 			pre_behave = philo_think(philo);
-		dprintf(2, "think pre_behave %d\n", pre_behave);
+			first++;
+		}
 		if (pre_behave == -1)
+		{
+			// dprintf(2, "think pre_behave %d\n", pre_behave);
 			return (0);
+		}
 	}
 	return (0);
 }
@@ -236,35 +244,38 @@ int	start_all_thread(t_philo *philo, t_share *share)
 
 int	main(int argc, char *argv[])
 {
-	t_share		share;
+	t_share		*share;
 	t_philo		*philo;
 	pthread_t	monitor;
 	int			result;
 	int			i;
 
-	memset(&share, 0, sizeof(t_share));
+	share = (t_share *)malloc(sizeof(t_share));
+	memset(share, 0, sizeof(t_share));
 	philo = NULL;
 	i = 0;
-	if (check_argument_validity_and_init_input(argc, argv, &share) == -1)
+	if (check_argument_validity_and_init_input(argc, argv, share) == -1)
 		return (argument_error_return());
-	if (init_all(&share, &philo) == -1)
+	if (init_all(share, &philo) == -1)
 		return (0);
 	// start_monitoring(&monitor, &share, philo);
-	if (start_all_thread(philo, &share) == -1)
+	if (start_all_thread(philo, share) == -1)
 		return (-1);// TODO 다정리!!!
-	while (i < share.num_of_philo)
+	while (i < share->num_of_philo)
 	{
+		// printf("%d -> ㅇㅕ기??\n", i);
 		pthread_join(philo[i].thread, NULL);
+		// printf("%d -> 아니!!\n", i);
 		i++;
 	}
 	i = 0;
-	pthread_mutex_destroy(&share.dead.mutex);
-	pthread_mutex_destroy(&share.print_mutex);
-	pthread_mutex_destroy(&share.error.mutex);//TODO 이거 넣어 말아.ㅡㅁ
-	while (i < share.num_of_philo)
+	pthread_mutex_destroy(&share->dead->mutex);
+	pthread_mutex_destroy(&share->print_mutex);
+	pthread_mutex_destroy(&share->error.mutex);//TODO 이거 넣어 말아.ㅡㅁ
+	while (i < share->num_of_philo)
 	{
-		pthread_mutex_destroy(&share.fork[i].mutex);
-		pthread_detach(philo[i].thread);
+		pthread_mutex_destroy(&share->fork[i].mutex);
+		// pthread_detach(philo[i].thread);
 		i++;
 	}
 }
