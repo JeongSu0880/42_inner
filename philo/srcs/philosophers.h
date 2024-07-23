@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/23 19:42:52 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/23 21:01:31 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ typedef struct	s_error
 
 typedef struct s_share
 {
-	struct s_fork	*fork;//TODO 이거 어케할지
-	struct s_dead	*dead;
-	struct s_error	error;
+	t_fork			*fork;//TODO 이거 어케할지
+	t_dead			*dead;
+	t_error			error;
 	pthread_mutex_t	print_mutex;
 	int				num_of_philo;
 	int				time_to_die;
