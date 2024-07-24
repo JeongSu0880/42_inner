@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 21:06:38 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/23 20:46:52 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/24 21:36:54 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,16 @@ int	is_philo_terminated(t_philo *philo)
 	return (0);
 }
 
-int	ft_usleep(int ms, t_philo *philo)
+int	ft_usleep(size_t ms, t_philo *philo)
 {
 	size_t	start;
 
 	start = ft_gettime();
 	while (ft_gettime() - start < ms)
 	{
-		if (is_philo_terminated(philo))
-			return (-1);
-		usleep(100);
+		// if (is_philo_terminated(philo))
+		// 	return (-1);
+		usleep(500);
 	}
 	return (1);
 }

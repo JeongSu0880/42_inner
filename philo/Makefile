@@ -1,12 +1,18 @@
 CC = cc
 NAME = philo
-# CFLAGS = -Wextra -Wall -Werror
-CFLAGS = -fsanitize=thread
+CFLAGS = #-Wextra -Wall -Werror
+# CFLAGS = -fsanitize=thread
 SRC_DIR = srcs/
 OBJ_DIR = objs/
 DEP_DIR = dep/
 
-SRCS_NAME = main argument_check_and_init error utils action action_2
+SRCS_NAME = main \
+			argument_check_and_init \
+			error \
+			utils \
+			action \
+			action_2 \
+			clean_malloc
 
 SRCS = $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRCS_NAME)))
 OBJS = $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRCS_NAME)))

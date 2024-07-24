@@ -6,25 +6,11 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:10 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/23 21:26:56 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/24 21:45:34 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-// void	print_philo(t_philo *philo, int num)//지워라
-// {
-// 	for (int i = 0; i < num; i++)
-// 	{
-// 		printf("---------------------------------\n");
-// 		printf("philo id : %d\n", philo[i].id);
-// 		printf("philo eat : %d\n", philo[i].eat);
-// 		printf("philo sleep : %d\n", philo[i].sleep);
-// 		printf("philo die : %d\n", philo[i].starve);
-// 		printf("philo num_eat : %d\n", philo[i].num_eat);
-// 		printf("---------------------------------\n");
-// 	}
-// }
 
 int	hold_both_fork_even(t_philo *philo)
 {
@@ -33,6 +19,7 @@ int	hold_both_fork_even(t_philo *philo)
 
 	r_done = 0;
 	l_done = 0;
+	// while (r_done == 1 && l_done == 1)
 	if (hold_fork_right(philo) == 1)
 		r_done = 1;
 	if (hold_fork_left(philo) == 1)
@@ -94,53 +81,56 @@ int	philo_die(t_philo *philo, int *dead_flag, int print_flag)
 
 int	philo_sleep(t_philo *philo)
 {
-	size_t	start;
-
-	if (is_philo_terminated(philo) == 1)
-	{
-		// dprintf(2, "philo_sleep\n");//TODO 지워
-		return (-1);
-	}
-	// if ((ft_gettime() - philo->last_eat + philo->sleep) >= philo->starve)
-	// 	return (philo_die(philo, &(philo->share->dead.is_dead), 1));
+	int	ret;
+	// if (is_philo_terminated(philo) == 1)
+	// 	return (-1);
 	pthread_mutex_lock(&(philo->share->print_mutex));
 	printf("%zu %d is sleeping\n", ft_gettime() - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));
-	return (ft_usleep(philo->sleep, philo));
+	ret = ft_usleep(philo->sleep, philo);
+	return (ret);
 }
 
 int	philo_eat(t_philo *philo)
 {
 	size_t		start;
 	int			hold;
+	int			ret;
 
 	if (is_philo_terminated(philo) == 1)
 		return (-1);
 	if (philo->id & 1)
-		hold = hold_both_fork_even(philo);
-	else
 		hold = hold_both_fork_odd(philo);
+	else
+		hold = hold_both_fork_even(philo);
 	if (hold)
 	{
 		pthread_mutex_lock(&(philo->share->print_mutex));
-		start = ft_gettime();
-		printf("%zu %d is eating\n", start - philo->birth, philo->id);
+		//start = ft_gettime();
+		printf("%zu %d is eating\n", ft_gettime() - philo->birth, philo->id);
 		pthread_mutex_unlock(&(philo->share->print_mutex));
-		philo->last_eat = start;
+		philo->last_eat = ft_gettime();
 		if (ft_usleep(philo->eat, philo) == -1)
 			return (-1);
-		put_fork_down_left(philo);
-		put_fork_down_right(philo);
+		if (philo->id & 1)
+		{
+			put_fork_down_right(philo);
+			put_fork_down_left(philo);
+		}
+		else
+		{
+			put_fork_down_left(philo);
+			put_fork_down_right(philo);
+		}
 		philo->num_eat++;
-		return (philo_sleep(philo));
+		ret = philo_sleep(philo);
+		return (ret);
 	}
 	return (0);
 }
 
 int	philo_think(t_philo *philo)
 {
-	size_t		start;
-
 	if (is_philo_terminated(philo) == 1)
 		return (-1);
 	pthread_mutex_lock(&(philo->share->print_mutex));
@@ -164,8 +154,8 @@ void	*philo_behave(void *philo)
 	{
 		if (share->num_flag == 1 && me->num_eat == share->num_of_eat)
 			return (0);
-		// if (is_philo_terminated(philo) == 1)
-		// 	return (0);
+		if (is_philo_terminated(philo) == 1)
+			return (0);
 		pre_behave = philo_eat(philo);
 		if (pre_behave == -1)
 			return (0);
@@ -201,40 +191,30 @@ int	main(int argc, char *argv[])
 {
 	t_share		*share;
 	t_philo		*philo;
-	pthread_t	monitor;
-	int			result;
 	int			i;
 
 	share = (t_share *)malloc(sizeof(t_share));
 	memset(share, 0, sizeof(t_share));
 	philo = NULL;
-	i = 0;
 	if (check_argument_validity_and_init_input(argc, argv, share) == -1)
 		return (argument_error_return());
 	if (init_all(share, &philo) == -1)
 		return (0);
-	// start_monitoring(&monitor, &share, philo);
 	if (start_all_thread(philo, share) == -1)
-		return (-1);// TODO 다정리!!!
+	{
+		free_all(philo, share);
+		destroy_all_mutex(share);
+		return (ERROR_RETURN);
+	}
+	i = 0;
 	while (i < share->num_of_philo)
 	{
 		pthread_join(philo[i].thread, NULL);
 		i++;
 	}
-	i = 0;
-	pthread_mutex_destroy(&share->dead->mutex);
-	pthread_mutex_destroy(&share->print_mutex);
-	pthread_mutex_destroy(&share->error.mutex);//TODO 이거 넣어 말아.ㅡㅁ
-	while (i < share->num_of_philo)
-	{
-		pthread_mutex_destroy(&share->fork[i].mutex);
-		// pthread_detach(philo[i].thread);
-		i++;
-	}
 }
 
-
-
-// 에러 처리 함수 정리하기.. 하나로...
-// die 한번만 프린트 하기
-// 마지막 스레드 정리, 다 프리해주기
+//지연 줄이기 ->> 3 610     200 100 했했을  때  잘 되어야함.
+// 먹는 횟수 넣었을 때 끝날 때 왜 죄다 띵킹???? 이상행동 이상행동
+//자원 분배
+// 할당한 것들 다 프리 시켜주기

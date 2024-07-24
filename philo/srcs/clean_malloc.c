@@ -1,38 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   clean_malloc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/12 17:08:44 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/24 18:58:25 by jungslee         ###   ########.fr       */
+/*   Created: 2024/07/24 17:09:26 by jungslee          #+#    #+#             */
+/*   Updated: 2024/07/24 18:41:11 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	argument_error_return(void)
+void	free_all(t_philo *philo, t_share *share)
 {
-	printf("Wrong argument!");
-	return (1);
+	free(philo);
+	free(share->fork);
+	free(share->dead);
+	free(share->error);
+	free(share);
 }
 
-int	handle_error(char *str, t_share *share)
+void	destroy_all_mutex(t_share *share)
 {
 	int	i;
 
 	i = 0;
-	printf("error : %s\n", str);
-	pthread_mutex_lock(&(share->error->mutex));
-	share->error->is_error = 1;
-	pthread_mutex_unlock(&(share->error->mutex));
-	return (-1);
-}
-
-void	set_error(t_error *error)
-{
-	pthread_mutex_lock(&(error->mutex));
-	error->is_error = 1;
-	pthread_mutex_unlock(&(error->mutex));
+	while (i < share->num_of_philo)
+	{
+		pthread_mutex_destroy(&share->fork[i].mutex);
+		i++;
+	}
+	pthread_mutex_destroy(&share->dead->mutex);
+	pthread_mutex_destroy(&share->print_mutex);
+	pthread_mutex_destroy(&share->error->mutex);//TODO 이거 넣어 말아.ㅡㅁ
 }

@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/23 21:01:31 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/24 18:08:00 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <string.h>
+
+# define ERROR_RETURN -1
+# define DEAD_RETURN -2
 
 typedef struct s_fork
 {
@@ -43,12 +46,12 @@ typedef struct s_share
 {
 	t_fork			*fork;//TODO 이거 어케할지
 	t_dead			*dead;
-	t_error			error;
+	t_error			*error;
 	pthread_mutex_t	print_mutex;
 	int				num_of_philo;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
+	size_t			time_to_die;
+	size_t			time_to_eat;
+	size_t			time_to_sleep;
 	int				num_flag;
 	int				num_of_eat;
 }	t_share;
@@ -59,9 +62,9 @@ typedef struct s_philo
 	pthread_t		thread;
 	int				id;
 	size_t			birth;
-	int				eat;
-	int				sleep;
-	int				starve;
+	size_t			eat;
+	size_t			sleep;
+	size_t			starve;
 	int				num_eat;
 	size_t			last_eat;
 	int				pre_behave;
@@ -93,7 +96,7 @@ void	put_fork_down_left(t_philo *philo);
 size_t		ft_gettime(void);
 char	*ph_itoa(int n);
 int		is_philo_terminated(t_philo *philo);
-int		ft_usleep(int ms, t_philo *philo);
+int	ft_usleep(size_t ms, t_philo *philo);
 
 /*action_2.c*/
 int	check_reach_done(t_fork *l_fork, t_fork *r_fork);
@@ -101,5 +104,9 @@ int	check_fork_stat(t_fork *l_fork, t_fork *r_fork);
 
 int	philo_die(t_philo *philo, int *dead_flag, int print_flag);
 int	hold_both_fork(t_philo *philo);
+
+/*clean.c*/
+void	destroy_all_mutex(t_share *share);
+void	free_all(t_philo *philo, t_share *share);
 
 #endif
