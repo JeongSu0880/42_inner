@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:10 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/24 21:45:34 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/24 22:16:12 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	hold_both_fork_odd(t_philo *philo)
 
 	r_done = 0;
 	l_done = 0;
+
 	if (hold_fork_left(philo) == 1)
 		l_done = 1;
 	if (hold_fork_right(philo) == 1)
@@ -62,6 +63,36 @@ int	hold_both_fork_odd(t_philo *philo)
 		put_fork_down_left(philo);
 	else if (r_done == 1)
 		put_fork_down_right(philo);
+	return (0);
+}
+
+
+int	hold_both_fork(t_philo *philo)
+{
+	int	r_done;
+	int	l_done;
+
+	r_done = 0;
+	l_done = 0;
+	// while (r_done == 1 && l_done == 1)
+	if (philo->life + philo->eat < philo->starve)
+		ft_usleep(1, philo);
+	if (hold_fork_right(philo) == 1)
+		r_done = 1;
+	if (hold_fork_left(philo) == 1)
+		l_done = 1;
+	if (r_done == 1 && l_done == 1)
+	{
+		pthread_mutex_lock(&philo->share->print_mutex);
+		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
+		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
+		pthread_mutex_unlock(&philo->share->print_mutex);
+		return (1);
+	}
+	else if (r_done == 1)
+		put_fork_down_right(philo);
+	else if (l_done == 1)
+		put_fork_down_left(philo);
 	return (0);
 }
 
@@ -82,12 +113,13 @@ int	philo_die(t_philo *philo, int *dead_flag, int print_flag)
 int	philo_sleep(t_philo *philo)
 {
 	int	ret;
-	// if (is_philo_terminated(philo) == 1)
-	// 	return (-1);
+	if (is_philo_terminated(philo) == 1)
+		return (-1);
 	pthread_mutex_lock(&(philo->share->print_mutex));
 	printf("%zu %d is sleeping\n", ft_gettime() - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));
 	ret = ft_usleep(philo->sleep, philo);
+	philo->life += philo->sleep;
 	return (ret);
 }
 
@@ -99,11 +131,12 @@ int	philo_eat(t_philo *philo)
 
 	if (is_philo_terminated(philo) == 1)
 		return (-1);
-	if (philo->id & 1)
-		hold = hold_both_fork_odd(philo);
-	else
-		hold = hold_both_fork_even(philo);
-	if (hold)
+
+	// if (philo->id & 1)
+	// 	hold = hold_both_fork_odd(philo);
+	// else
+	// 	hold = hold_both_fork_even(philo);
+	if (hold_both_fork(philo))
 	{
 		pthread_mutex_lock(&(philo->share->print_mutex));
 		//start = ft_gettime();
@@ -112,20 +145,14 @@ int	philo_eat(t_philo *philo)
 		philo->last_eat = ft_gettime();
 		if (ft_usleep(philo->eat, philo) == -1)
 			return (-1);
-		if (philo->id & 1)
-		{
-			put_fork_down_right(philo);
-			put_fork_down_left(philo);
-		}
-		else
-		{
-			put_fork_down_left(philo);
-			put_fork_down_right(philo);
-		}
+		put_fork_down_right(philo);
+		put_fork_down_left(philo);
 		philo->num_eat++;
+		philo->life = philo->eat;
 		ret = philo_sleep(philo);
 		return (ret);
 	}
+	philo->life = ft_gettime() - philo->last_eat; 
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/24 18:08:00 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/24 21:58:25 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ typedef struct s_philo
 	size_t			eat;
 	size_t			sleep;
 	size_t			starve;
+	size_t			life;
 	int				num_eat;
 	size_t			last_eat;
 	int				pre_behave;
