@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:08:44 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/24 18:58:25 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 18:51:28 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	handle_error(char *str, t_share *share)
 	pthread_mutex_lock(&(share->error->mutex));
 	share->error->is_error = 1;
 	pthread_mutex_unlock(&(share->error->mutex));
-	return (-1);
+	return (ERROR_RETURN);
 }
 
 void	set_error(t_error *error)

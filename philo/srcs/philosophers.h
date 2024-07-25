@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 17:14:49 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 19:04:42 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@
 
 # define ERROR_RETURN -1
 # define DEAD_RETURN -2
+# define DONE_EAT 2
+
+# define TRUE 1
+# define FALSE 0
 
 typedef struct s_fork
 {
@@ -44,7 +48,7 @@ typedef struct	s_error
 
 typedef struct s_share
 {
-	t_fork			*fork;//TODO 이거 어케할지
+	t_fork			*fork;
 	t_dead			*dead;
 	t_error			*error;
 	pthread_mutex_t	print_mutex;
@@ -76,9 +80,11 @@ typedef struct s_philo
 }	t_philo;
 
 /*argument_check_and_init.c*/
-int	init_all(t_share *share, t_philo **philo);
 int	check_argument_validity_and_init_input(int argc, char *argv[], \
 											t_share *share);
+
+/*argument_check_and_init_2.c*/
+int	init_all(t_share *share, t_philo **philo);
 
 /*error.c*/
 int		argument_error_return(void);
@@ -102,15 +108,15 @@ int		is_philo_terminated(t_philo *philo);
 int	ft_usleep(size_t ms, t_philo *philo);
 int	check_is_dead(t_dead *dead);
 
-/*action_2.c*/
-int	check_reach_done(t_fork *l_fork, t_fork *r_fork);
 int	check_is_occupied(t_fork *l_fork, t_fork *r_fork);
-int	check_fork_stat(t_fork *l_fork, t_fork *r_fork);
 int	philo_die(t_philo *philo, int *dead_flag, int print_flag);
 int	hold_both_fork(t_philo *philo);
 
 /*clean.c*/
 void	destroy_all_mutex(t_share *share);
 void	free_all(t_philo *philo, t_share *share);
+
+/*print.c*/
+int   print_hold_fork(t_philo *philo);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 21:06:38 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 12:18:46 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 18:55:06 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ int	check_is_dead(t_dead *dead)
 	if (dead->is_dead == 1)
 	{
 		pthread_mutex_unlock(&dead->mutex);
-		return (1);
+		return (TRUE);
 	}
 	pthread_mutex_unlock(&dead->mutex);
-	return (0);
+	return (FALSE);
 }
 
 int	is_philo_terminated(t_philo *philo)
@@ -37,14 +37,14 @@ int	is_philo_terminated(t_philo *philo)
 	if (check_is_dead(philo->share->dead))
 	{
 		philo_die(philo, &(philo->share->dead->is_dead), 0);
-		return (1);
+		return (TRUE);
 	}
 	if (ft_gettime() - philo->last_eat > philo->starve)
 	{
 		philo_die(philo, &(philo->share->dead->is_dead), 1);
-		return (1);
+		return (TRUE);
 	}
-	return (0);
+	return (FALSE);
 }
 
 int	ft_usleep(size_t ms, t_philo *philo)
@@ -55,8 +55,8 @@ int	ft_usleep(size_t ms, t_philo *philo)
 	while (ft_gettime() - start < ms)
 	{
 		if (is_philo_terminated(philo))
-			return (-1);
+			return (DEAD_RETURN);
 		usleep(200);
 	}
-	return (1);
+	return (0);
 }

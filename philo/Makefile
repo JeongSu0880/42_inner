@@ -8,10 +8,10 @@ DEP_DIR = dep/
 
 SRCS_NAME = main \
 			argument_check_and_init \
+			argument_check_and_init_2 \
 			error \
 			utils \
 			action \
-			action_2 \
 			clean_malloc
 
 SRCS = $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRCS_NAME)))

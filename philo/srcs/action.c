@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:05:37 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 14:17:40 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 18:11:36 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,6 @@ int	hold_fork_left(t_philo *philo)
 	pthread_mutex_unlock(&philo->l_fork->mutex);
 	return (0);
 }
-
-// void	hold_fork_left(t_philo *philo)
-// {
-// 	if (pthread_mutex_lock(&(philo->l_fork->mutex)) != 0)
-// 		set_error(&(philo->share->error));
-//     philo->l_fork->is_occupied = 1;
-//     if (pthread_mutex_unlock(&(philo->l_fork->mutex)) != 0)
-// 		set_error(&(philo->share->error));
-// }
 
 void	put_fork_down_right(t_philo *philo)
 {
