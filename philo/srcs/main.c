@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:10 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 14:32:56 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 17:25:50 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,9 @@ int	hold_both_fork(t_philo *philo)
 
 	r_done = 0;
 	l_done = 0;
-	if (philo->pre_behave == 1)
-		wait_wait();
-	// if (!check_fork_stat(philo->l_fork, philo->r_fork))
-	// 	return (0);
+	if (philo->num_ate != 0 && \
+		ft_gettime() - philo->last_eat + philo->eat < philo->starve)
+		return (0);
 	if (hold_fork_right(philo) == 1)
 		r_done = 1;
 	if (hold_fork_left(philo) == 1)
@@ -110,6 +109,11 @@ int	hold_both_fork(t_philo *philo)
 int	philo_die(t_philo *philo, int *dead_flag, int print_flag)
 {
 	pthread_mutex_lock(&(philo->share->dead->mutex));
+	if (*dead_flag == 1)
+	{
+		pthread_mutex_unlock(&(philo->share->dead->mutex));
+		return (-1);
+	}
 	*dead_flag = 1;//TODO 이렇게 해도 바뀌나??
 	pthread_mutex_unlock(&(philo->share->dead->mutex));
 	if (print_flag == 1)
@@ -124,16 +128,13 @@ int	philo_die(t_philo *philo, int *dead_flag, int print_flag)
 int	philo_sleep(t_philo *philo)
 {
 	int	ret;
+
 	if (is_philo_terminated(philo) == 1)
 		return (-1);
-	// printf("philo %d time log4 :::::: %zu\n",  philo->id, ft_gettime());
 	pthread_mutex_lock(&(philo->share->print_mutex));
 	printf("%zu %d is sleeping\n", ft_gettime() - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));
 	ret = ft_usleep(philo->sleep, philo);
-	// philo->life += philo->sleep;
-	// if (philo->life + philo->eat < philo->starve)
-	// 	wait_wait();
 	return (ret);
 }
 
@@ -143,23 +144,13 @@ int	philo_eat(t_philo *philo)
 	int			hold;
 	int			ret;
 
-
-	// if (philo->id & 1)
-	// 	hold = hold_both_fork_odd(philo);
-	// else
-	// 	hold = hold_both_fork_even(philo);
 	while (1)
 	{
 		if (is_philo_terminated(philo) == 1)
-		{
-			// printf("philo %d time log1 :::::: %zu\n", philo->id, ft_gettime());
 			return (-1);
-		}
 		if (hold_both_fork(philo))
 		{
-			// printf("philo %d time log2 :::::: %zu\n",  philo->id, ft_gettime());
 			pthread_mutex_lock(&(philo->share->print_mutex));
-			//start = ft_gettime();
 			printf("%zu %d is eating\n", ft_gettime() - philo->birth, philo->id);
 			pthread_mutex_unlock(&(philo->share->print_mutex));
 			philo->last_eat = ft_gettime();
@@ -167,14 +158,11 @@ int	philo_eat(t_philo *philo)
 				return (-1);
 			put_fork_down_right(philo);
 			put_fork_down_left(philo);
-			philo->num_eat++;
-			// printf("philo %d time log3 :::::: %zu\n",  philo->id, ft_gettime());
-			// philo->life = philo->eat;
 			ret = philo_sleep(philo);
-			philo->pre_behave = 1;
 			return (ret);
 		}
-		usleep(50);
+		else
+			usleep(50);
 	}
 	return (0);
 }
@@ -186,9 +174,6 @@ int	philo_think(t_philo *philo)
 	pthread_mutex_lock(&(philo->share->print_mutex));
 	printf("%zu %d is thinking\n", ft_gettime() - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));
-	philo->pre_behave = 0;
-	// if (ft_usleep(1, philo) == -1)
-	// 	return (-1);
 	return (0);
 }
 
@@ -196,22 +181,19 @@ void	*philo_behave(void *philo)
 {
 	t_philo	*me;
 	t_share *share;
-	int		num_eat;
 
 	me = (t_philo *)philo;
 	share = me->share;
 	me->last_eat = me->birth;
-	num_eat = 0;
-	// if (!(me->id & 1))
-	// 	philo_think(philo);
 	while (1)
 	{
-		if (me->num_flag == 1 && num_eat == me->num_eat)
+		if (me->num_flag == 1 && me->num_ate == me->num_must_eat)
 			return (0);
-		// if (is_philo_terminated(philo) == 1)
-		// 	return (0);
+		if (is_philo_terminated(philo) == 1)
+			return (0);
 		if (philo_eat(philo) == -1)
 			return (0);
+		me->num_ate++;
 		if (philo_think(philo) == -1)
 			return (0);
 	}
@@ -223,7 +205,7 @@ int	start_all_thread(t_philo *philo, t_share *share)
 	int	i;
 
 	i = 0;
-	long long time;
+	size_t time;
 	time = ft_gettime();
 	while (i < share->num_of_philo)
 	{

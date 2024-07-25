@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:06:01 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 14:13:41 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 17:15:10 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,11 @@ void	init_one_philo(t_philo *philo, t_share *share)
 	philo->sleep = share->time_to_sleep;
 	philo->starve = share->time_to_die;
 	philo->life = 0;
+	philo->num_ate = 0;
 	if (share->num_flag == 1)
 	{
 		philo->num_flag = 1;
-		philo->num_eat = share->num_of_eat;
+		philo->num_must_eat = share->num_of_eat;
 	}
 	philo->l_fork = &(share->fork[philo->id - 1]);
 	if (philo->id == 1)
