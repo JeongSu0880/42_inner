@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:08:44 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 19:21:19 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 19:37:38 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	argument_error_return(void)
 	return (1);
 }
 
-int	handle_error(char *str, t_share *share)
+int	handle_error(char *str)
 {
 	int	i;
 

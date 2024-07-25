@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:10 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 19:32:52 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 19:38:05 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	start_all_thread(t_philo *philo, t_share *share)
 		philo[i].birth = time;
 		if (pthread_create(&(philo[i].thread), NULL, philo_behave, \
 			(void *)&(philo[i])) < 0)
-			return (handle_error("pthread_create error", share));
+			return (handle_error("pthread_create error"));
 		i++;
 	}
 	return (0);

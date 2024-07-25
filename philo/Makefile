@@ -1,7 +1,6 @@
 CC = cc
 NAME = philo
-CFLAGS = #-Wextra -Wall -Werror
-CFLAGS = -fsanitize=thread
+CFLAGS = -Wextra -Wall -Werror
 SRC_DIR = srcs/
 OBJ_DIR = objs/
 DEP_DIR = dep/
@@ -13,7 +12,8 @@ SRCS_NAME = main \
 			utils \
 			action \
 			clean_malloc \
-			print
+			print \
+			philo_behave
 
 SRCS = $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRCS_NAME)))
 OBJS = $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRCS_NAME)))

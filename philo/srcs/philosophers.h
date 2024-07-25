@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:48 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 19:31:12 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 19:37:49 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	wait_thread_end(t_philo *philo, t_share *share);
 
 /*error.c*/
 int		argument_error_return(void);
-int		handle_error(char *str, t_share *share);
+int		handle_error(char *str);
 
 /*philo_behave.c*/
 int		hold_both_fork(t_philo *philo);
