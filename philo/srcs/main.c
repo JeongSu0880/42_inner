@@ -6,65 +6,75 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:08:10 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/24 22:16:12 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 14:32:56 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	hold_both_fork_even(t_philo *philo)
-{
-	int	r_done;
-	int	l_done;
+// int	hold_both_fork_even(t_philo *philo)
+// {
+// 	int	r_done;
+// 	int	l_done;
 
-	r_done = 0;
-	l_done = 0;
-	// while (r_done == 1 && l_done == 1)
-	if (hold_fork_right(philo) == 1)
-		r_done = 1;
-	if (hold_fork_left(philo) == 1)
-		l_done = 1;
-	if (r_done == 1 && l_done == 1)
-	{
-		pthread_mutex_lock(&philo->share->print_mutex);
-		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
-		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
-		pthread_mutex_unlock(&philo->share->print_mutex);
-		return (1);
-	}
-	else if (r_done == 1)
-		put_fork_down_right(philo);
-	else if (l_done == 1)
-		put_fork_down_left(philo);
-	return (0);
+// 	r_done = 0;
+// 	l_done = 0;
+// 	// while (r_done == 1 && l_done == 1)
+// 	if (hold_fork_right(philo) == 1)
+// 		r_done = 1;
+// 	if (hold_fork_left(philo) == 1)
+// 		l_done = 1;
+// 	if (r_done == 1 && l_done == 1)
+// 	{
+// 		pthread_mutex_lock(&philo->share->print_mutex);
+// 		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
+// 		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
+// 		pthread_mutex_unlock(&philo->share->print_mutex);
+// 		return (1);
+// 	}
+// 	else if (r_done == 1)
+// 		put_fork_down_right(philo);
+// 	else if (l_done == 1)
+// 		put_fork_down_left(philo);
+// 	return (0);
+// }
+
+// int	hold_both_fork_odd(t_philo *philo)
+// {
+// 	int	r_done;
+// 	int	l_done;
+
+// 	r_done = 0;
+// 	l_done = 0;
+
+// 	if (hold_fork_left(philo) == 1)
+// 		l_done = 1;
+// 	if (hold_fork_right(philo) == 1)
+// 		r_done = 1;
+// 	if (r_done == 1 && l_done == 1)
+// 	{
+// 		pthread_mutex_lock(&philo->share->print_mutex);
+// 		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
+// 		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
+// 		pthread_mutex_unlock(&philo->share->print_mutex);
+// 		return (1);
+// 	}
+// 	else if (l_done == 1)
+// 		put_fork_down_left(philo);
+// 	else if (r_done == 1)
+// 		put_fork_down_right(philo);
+// 	return (0);
+// }
+
+void wait_wait(void)
+{
+	int	i;
+
+	i = 0;
+	while (i < 100)
+		i++;
 }
 
-int	hold_both_fork_odd(t_philo *philo)
-{
-	int	r_done;
-	int	l_done;
-
-	r_done = 0;
-	l_done = 0;
-
-	if (hold_fork_left(philo) == 1)
-		l_done = 1;
-	if (hold_fork_right(philo) == 1)
-		r_done = 1;
-	if (r_done == 1 && l_done == 1)
-	{
-		pthread_mutex_lock(&philo->share->print_mutex);
-		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
-		printf("%zu %d has taken a fork\n", ft_gettime() - philo->birth, philo->id);
-		pthread_mutex_unlock(&philo->share->print_mutex);
-		return (1);
-	}
-	else if (l_done == 1)
-		put_fork_down_left(philo);
-	else if (r_done == 1)
-		put_fork_down_right(philo);
-	return (0);
-}
 
 
 int	hold_both_fork(t_philo *philo)
@@ -74,9 +84,10 @@ int	hold_both_fork(t_philo *philo)
 
 	r_done = 0;
 	l_done = 0;
-	// while (r_done == 1 && l_done == 1)
-	if (philo->life + philo->eat < philo->starve)
-		ft_usleep(1, philo);
+	if (philo->pre_behave == 1)
+		wait_wait();
+	// if (!check_fork_stat(philo->l_fork, philo->r_fork))
+	// 	return (0);
 	if (hold_fork_right(philo) == 1)
 		r_done = 1;
 	if (hold_fork_left(philo) == 1)
@@ -89,9 +100,9 @@ int	hold_both_fork(t_philo *philo)
 		pthread_mutex_unlock(&philo->share->print_mutex);
 		return (1);
 	}
-	else if (r_done == 1)
+	if (r_done)
 		put_fork_down_right(philo);
-	else if (l_done == 1)
+	if (l_done)
 		put_fork_down_left(philo);
 	return (0);
 }
@@ -115,11 +126,14 @@ int	philo_sleep(t_philo *philo)
 	int	ret;
 	if (is_philo_terminated(philo) == 1)
 		return (-1);
+	// printf("philo %d time log4 :::::: %zu\n",  philo->id, ft_gettime());
 	pthread_mutex_lock(&(philo->share->print_mutex));
 	printf("%zu %d is sleeping\n", ft_gettime() - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));
 	ret = ft_usleep(philo->sleep, philo);
-	philo->life += philo->sleep;
+	// philo->life += philo->sleep;
+	// if (philo->life + philo->eat < philo->starve)
+	// 	wait_wait();
 	return (ret);
 }
 
@@ -129,30 +143,39 @@ int	philo_eat(t_philo *philo)
 	int			hold;
 	int			ret;
 
-	if (is_philo_terminated(philo) == 1)
-		return (-1);
 
 	// if (philo->id & 1)
 	// 	hold = hold_both_fork_odd(philo);
 	// else
 	// 	hold = hold_both_fork_even(philo);
-	if (hold_both_fork(philo))
+	while (1)
 	{
-		pthread_mutex_lock(&(philo->share->print_mutex));
-		//start = ft_gettime();
-		printf("%zu %d is eating\n", ft_gettime() - philo->birth, philo->id);
-		pthread_mutex_unlock(&(philo->share->print_mutex));
-		philo->last_eat = ft_gettime();
-		if (ft_usleep(philo->eat, philo) == -1)
+		if (is_philo_terminated(philo) == 1)
+		{
+			// printf("philo %d time log1 :::::: %zu\n", philo->id, ft_gettime());
 			return (-1);
-		put_fork_down_right(philo);
-		put_fork_down_left(philo);
-		philo->num_eat++;
-		philo->life = philo->eat;
-		ret = philo_sleep(philo);
-		return (ret);
+		}
+		if (hold_both_fork(philo))
+		{
+			// printf("philo %d time log2 :::::: %zu\n",  philo->id, ft_gettime());
+			pthread_mutex_lock(&(philo->share->print_mutex));
+			//start = ft_gettime();
+			printf("%zu %d is eating\n", ft_gettime() - philo->birth, philo->id);
+			pthread_mutex_unlock(&(philo->share->print_mutex));
+			philo->last_eat = ft_gettime();
+			if (ft_usleep(philo->eat, philo) == -1)
+				return (-1);
+			put_fork_down_right(philo);
+			put_fork_down_left(philo);
+			philo->num_eat++;
+			// printf("philo %d time log3 :::::: %zu\n",  philo->id, ft_gettime());
+			// philo->life = philo->eat;
+			ret = philo_sleep(philo);
+			philo->pre_behave = 1;
+			return (ret);
+		}
+		usleep(50);
 	}
-	philo->life = ft_gettime() - philo->last_eat; 
 	return (0);
 }
 
@@ -163,6 +186,9 @@ int	philo_think(t_philo *philo)
 	pthread_mutex_lock(&(philo->share->print_mutex));
 	printf("%zu %d is thinking\n", ft_gettime() - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));
+	philo->pre_behave = 0;
+	// if (ft_usleep(1, philo) == -1)
+	// 	return (-1);
 	return (0);
 }
 
@@ -170,28 +196,23 @@ void	*philo_behave(void *philo)
 {
 	t_philo	*me;
 	t_share *share;
-	int		pre_behave;
-	int		first;
+	int		num_eat;
 
 	me = (t_philo *)philo;
 	share = me->share;
 	me->last_eat = me->birth;
-	first = 0;
+	num_eat = 0;
+	// if (!(me->id & 1))
+	// 	philo_think(philo);
 	while (1)
 	{
-		if (share->num_flag == 1 && me->num_eat == share->num_of_eat)
+		if (me->num_flag == 1 && num_eat == me->num_eat)
 			return (0);
-		if (is_philo_terminated(philo) == 1)
+		// if (is_philo_terminated(philo) == 1)
+		// 	return (0);
+		if (philo_eat(philo) == -1)
 			return (0);
-		pre_behave = philo_eat(philo);
-		if (pre_behave == -1)
-			return (0);
-		if (pre_behave == 1 || first == 0)
-		{
-			pre_behave = philo_think(philo);
-			first++;
-		}
-		if (pre_behave == -1)
+		if (philo_think(philo) == -1)
 			return (0);
 	}
 	return (0);

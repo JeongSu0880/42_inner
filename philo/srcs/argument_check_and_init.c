@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:06:01 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/24 21:58:52 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 14:13:41 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,16 @@ void	init_one_philo(t_philo *philo, t_share *share)
 	philo->starve = share->time_to_die;
 	philo->life = 0;
 	if (share->num_flag == 1)
-		philo->num_eat = 0;
+	{
+		philo->num_flag = 1;
+		philo->num_eat = share->num_of_eat;
+	}
 	philo->l_fork = &(share->fork[philo->id - 1]);
 	if (philo->id == 1)
 		philo->r_fork = &(share->fork[share->num_of_philo - 1]);
 	else
 		philo->r_fork = &(share->fork[philo->id - 2]);
+	// dprintf(2, "r_fork : %d   l_fork : %d\n", philo->id - 2, philo->id - 1);
 }
 
 int	init_all(t_share *share, t_philo **philo)
@@ -107,7 +111,7 @@ int	init_all(t_share *share, t_philo **philo)
 	while (i < share->num_of_philo)
 	{
 		pthread_mutex_init(&share->fork[i].mutex, NULL);
-		share->fork[i].fork_stat = 0;
+		share->fork[i].is_occupied = 0;
 		share->fork[i].reach = 0;
 		(*philo)[i].share = share;
 		(*philo)[i].id = i + 1;

@@ -1,7 +1,7 @@
 CC = cc
 NAME = philo
 CFLAGS = #-Wextra -Wall -Werror
-# CFLAGS = -fsanitize=thread
+CFLAGS = -fsanitize=address
 SRC_DIR = srcs/
 OBJ_DIR = objs/
 DEP_DIR = dep/

@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 21:06:38 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/24 21:36:54 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 12:18:46 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ int	ft_usleep(size_t ms, t_philo *philo)
 	start = ft_gettime();
 	while (ft_gettime() - start < ms)
 	{
-		// if (is_philo_terminated(philo))
-		// 	return (-1);
-		usleep(500);
+		if (is_philo_terminated(philo))
+			return (-1);
+		usleep(200);
 	}
 	return (1);
 }
