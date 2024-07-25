@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 17:09:26 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 18:11:57 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 19:31:35 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	free_all(t_philo *philo, t_share *share)
 	free(philo);
 	free(share->fork);
 	free(share->dead);
-	free(share->error);
 	free(share);
 }
 
@@ -33,5 +32,16 @@ void	destroy_all_mutex(t_share *share)
 	}
 	pthread_mutex_destroy(&share->dead->mutex);
 	pthread_mutex_destroy(&share->print_mutex);
-	pthread_mutex_destroy(&share->error->mutex);//TODO 이거 넣어 말아.ㅡㅁ
+}
+
+void	wait_thread_end(t_philo *philo, t_share *share)
+{
+	int	i;
+
+	i = 0;
+	while (i < share->num_of_philo)
+	{
+		pthread_join(philo[i].thread, NULL);
+		i++;
+	}
 }

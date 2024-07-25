@@ -6,18 +6,17 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 18:15:01 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 19:00:25 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/25 19:28:54 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	init_one_philo(t_philo *philo, t_share *share)
+static void	init_one_philo(t_philo *philo, t_share *share)
 {
 	philo->eat = share->time_to_eat;
 	philo->sleep = share->time_to_sleep;
 	philo->starve = share->time_to_die;
-	philo->life = 0;
 	philo->num_ate = 0;
 	if (share->num_flag == 1)
 	{
@@ -31,22 +30,16 @@ void	init_one_philo(t_philo *philo, t_share *share)
 		philo->r_fork = &(share->fork[philo->id - 2]);
 }
 
-int    init_all_mutex(t_share *share)
+static int	init_all_mutex(t_share *share)
 {
 	if (pthread_mutex_init(&share->dead->mutex, NULL) != 0)
-        return (ERROR_RETURN);
+		return (ERROR_RETURN);
 	if (pthread_mutex_init(&share->print_mutex, NULL) != 0)
-    {
-        pthread_mutex_destroy(&share->dead->mutex);
-        return (ERROR_RETURN);
-    }
-	if (pthread_mutex_init(&share->error->mutex, NULL) != 0)
-    {
-        pthread_mutex_destroy(&share->dead->mutex);
-        pthread_mutex_destroy(&share->print_mutex);
-        return (ERROR_RETURN);
-    }
-    return (0);
+	{
+		pthread_mutex_destroy(&share->dead->mutex);
+		return (ERROR_RETURN);
+	}
+	return (0);
 }
 
 int	init_all(t_share *share, t_philo **philo)
@@ -57,9 +50,7 @@ int	init_all(t_share *share, t_philo **philo)
 	share->fork = (t_fork *)malloc(sizeof(t_fork) * share->num_of_philo);
 	*philo = (t_philo *)malloc(sizeof(t_philo) * share->num_of_philo);
 	share->dead = (t_dead *)malloc(sizeof(t_dead));
-	share->error = (t_error *)malloc(sizeof(t_error));
 	share->dead->is_dead = 0;
-	share->error->is_error = 0;
 	if ((share->fork == NULL || philo == NULL) && share->num_of_philo != 0)
 		return (ERROR_RETURN);
 	while (i < share->num_of_philo)
@@ -72,7 +63,7 @@ int	init_all(t_share *share, t_philo **philo)
 		init_one_philo(&((*philo)[i]), share);
 		i++;
 	}
-    if (init_all_mutex(share) == ERROR_RETURN)
-        return (ERROR_RETURN);
+	if (init_all_mutex(share) == ERROR_RETURN)
+		return (ERROR_RETURN);
 	return (0);
 }
