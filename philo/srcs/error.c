@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:08:44 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 19:37:38 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/26 12:42:31 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	argument_error_return(void)
 {
 	printf("Wrong argument!");
-	return (1);
+	return (ERROR_RETURN);
 }
 
 int	handle_error(char *str)

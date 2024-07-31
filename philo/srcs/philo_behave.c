@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 19:24:07 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 19:26:02 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/29 15:57:01 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	hold_both_fork(t_philo *philo)
 	r_done = 0;
 	l_done = 0;
 	if (philo->num_ate != 0 && \
-		ft_gettime() - philo->last_eat + philo->eat < philo->starve)
+		ft_gettime() - philo->last_eat + philo->eat <= philo->starve)
 		return (0);
 	if (hold_fork_right(philo) == 1)
 		r_done = 1;
@@ -77,7 +77,6 @@ int	philo_eat(t_philo *philo)
 		{
 			if (print_eat(philo) == DEAD_RETURN)
 				return (DEAD_RETURN);
-			philo->last_eat = ft_gettime();
 			if (ft_usleep(philo->eat, philo) == DEAD_RETURN)
 				return (DEAD_RETURN);
 			put_fork_down_right(philo);
@@ -98,7 +97,7 @@ int	philo_think(t_philo *philo)
 	if (check_is_dead(philo->share->dead))
 	{
 		pthread_mutex_unlock(&(philo->share->print_mutex));
-		return (-1);
+		return (DEAD_RETURN);
 	}
 	printf("%zu %d is thinking\n", ft_gettime() - philo->birth, philo->id);
 	pthread_mutex_unlock(&(philo->share->print_mutex));

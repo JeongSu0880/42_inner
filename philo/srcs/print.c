@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 18:08:23 by jungslee          #+#    #+#             */
-/*   Updated: 2024/07/25 19:33:07 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/07/29 15:32:33 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	print_eat(t_philo *philo)
 		return (DEAD_RETURN);
 	}
 	printf("%zu %d is eating\n", ft_gettime() - philo->birth, philo->id);
+	philo->last_eat = ft_gettime();
 	pthread_mutex_unlock(&(philo->share->print_mutex));
 	return (0);
 }
