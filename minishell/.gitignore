@@ -1,0 +1,13 @@
+gitmessage.txt
+minishell
+test.c
+test.sh
+testcase
+
+
+.vscode
+*.o
+*.a
+*.dylib
+*.out
+*.dSYM/
