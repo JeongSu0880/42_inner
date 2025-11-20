@@ -1,0 +1,17 @@
+ex00
+long long 꼭 필수인가? if문으로 막?
+
+ex01
+
+
+ScavTrap::ScavTrap(const ScavTrap &original) {
+
+생성자이기 때문에 이니셜라이져 리스트를 사용하는게 맞는 초기화 방법
+
+복사대입연산자: 부모꺼 호출
+
+<= MIN 이라기보다 < MIN 
+
+guardGate는 애매함.
+
+
